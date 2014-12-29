@@ -1,9 +1,14 @@
 package com.edu.StudentShare;
 //Import required java libraries
 import java.io.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import com.edu.StudentShare.student.User;
+
 import java.util.*;
+
 import jersey.repackaged.org.objectweb.*;
 //Implements Filter class
 public class LogFilter implements Filter  {
@@ -14,7 +19,8 @@ public void  init(FilterConfig config)
    // Get init parameter 
    String logPath = config.getInitParameter("log_path"); 
 	log = new Utils(logPath);
-
+	User user=  new User();
+	
 }
 public void  doFilter(ServletRequest request, 
               ServletResponse response,

@@ -28,15 +28,18 @@ public class UserDataJDBC implements UserDataDAO {
 
 	@Override
 	public void createTable() {
-		try {
+		Statement st = null;
 
-			Statement st = conn.createStatement();
+		try {
+			st = conn.createStatement();
 			st.executeUpdate("create database if not exists my_db");
 			st.executeUpdate("use my_db");
 			String SQL = "CREATE TABLE IF NOT EXISTS "
 					+ tableName
 					+ "(id int NOT NULL AUTO_INCREMENT,`username` VARCHAR(100) NOT NULL,`password` VARCHAR(100) NOT NULL,`email` VARCHAR(100),`birth` DATE	,`first_Name`  VARCHAR(100) NOT NULL,`last_Name`  VARCHAR(100) NOT NULL,`Rank`  double NOT NULL DEFAULT 0,`image_url` VARCHAR(100) NOT NULL DEFAULT 'default image link',`description` VARCHAR(100) NOT NULL DEFAULT 'empty', primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
-
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID();");
+			;
 			st.execute(SQL);
 		} catch (SQLException ex) {
 			System.err.println(ex.getMessage());
@@ -51,13 +54,15 @@ public class UserDataJDBC implements UserDataDAO {
 
 		// this is for selecting db incase we do insert first
 		// ((DriverManagerDataSource)dataSource).setUrl("jdbc:mysql://localhost:3306/TestData");
-
+		Statement st = null;
+		int id = 0;
 		String SQL = "INSERT INTO "
 				+ tableName
 				+ " (`username`, `password`, `email`, `birth`, `first_Name`, `last_Name`)"
 				+ " VALUES (?,?,?,?,?,?);";
 		System.out.println("insert SQL=" + SQL);
 		try {
+			st = conn.createStatement();
 			PreparedStatement preparedStatement = conn.prepareStatement(SQL);
 			preparedStatement.setString(1, user.get_userName());
 			preparedStatement.setString(2, user.get_password());
@@ -66,12 +71,17 @@ public class UserDataJDBC implements UserDataDAO {
 			preparedStatement.setString(5, user.get_first_name());
 			preparedStatement.setString(6, user.get_last_name());
 			preparedStatement.executeUpdate();
-
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID() as last_id;");
+			while (rs.next()) {
+				id =  Integer.parseInt(rs.getString("last_id"));		
+			}
 			System.out.println("Created Record");
 		} catch (SQLException ex) {
 			System.err.println(ex.getMessage());
+			return 0;
 		}
-		return 0;
+		return id;
 	}
 
 	@Override
@@ -148,26 +158,22 @@ public class UserDataJDBC implements UserDataDAO {
 			preparedStatement.executeUpdate();
 
 			System.out.println("Created Record");
-			} 
-		catch (SQLException ex)
-		{
+		} catch (SQLException ex) {
 			System.err.println(ex.getMessage());
 		}
 		return true;
 	}
 
 	public List<UserData> getCurrentBirthdayUsers(Date date) {
-		try
-		{
-		String SQL = "SELECT id FROM" + tableName + 
-				"WHERE birth = ?";
-		PreparedStatement ps = conn.prepareStatement(SQL);
-		ps.setDate(1, date);
-		List<UserData> list = new ArrayList<UserData>();
-		list.add(null);
-		return list;
+		try {
+			String SQL = "SELECT id FROM" + tableName + "WHERE birth = ?";
+			PreparedStatement ps = conn.prepareStatement(SQL);
+			ps.setDate(1, date);
+			List<UserData> list = new ArrayList<UserData>();
+			list.add(null);
+			return list;
 		}
-		
+
 		catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
