@@ -68,4 +68,14 @@ public void set_last_name(String _last_name) {
 	this._last_name = _last_name;
 }
 
+
+@Override
+	public String toString() {
+		String output = "Username: " + _userName +" password: "+ _password
+				+"Firstname: " + _first_name +" Lastname: " + _last_name+ " Rank: "+
+				_userRank;
+				
+				
+		return output;
+	}
 }

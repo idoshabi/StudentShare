@@ -12,7 +12,9 @@ public interface UserDataDAO {
 	public void deleteUser(int userId);
 	
 	public int connect(String user, String pwd);
-		
+	
+	public UserData showUserInfo(int userid);
+	
 	public Boolean changePassword(int userId, String oldPwd, String newPwd);
 	
 	public List<UserData> getCurrentBirthdayUsers(Date date);

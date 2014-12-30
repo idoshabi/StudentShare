@@ -5,6 +5,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import com.edu.StudentShare.Message.Mess;
+import com.edu.StudentShare.Product.Prod;
 import com.edu.StudentShare.student.User;
 
 import java.util.*;
@@ -20,7 +22,8 @@ public void  init(FilterConfig config)
    String logPath = config.getInitParameter("log_path"); 
 	log = new Utils(logPath);
 	User user=  new User();
-	
+	Prod pro=  new Prod();
+	Mess mess = new Mess();
 }
 public void  doFilter(ServletRequest request, 
               ServletResponse response,

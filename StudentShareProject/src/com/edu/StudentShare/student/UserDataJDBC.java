@@ -38,8 +38,6 @@ public class UserDataJDBC implements UserDataDAO {
 					+ tableName
 					+ "(id int NOT NULL AUTO_INCREMENT,`username` VARCHAR(100) NOT NULL,`password` VARCHAR(100) NOT NULL,`email` VARCHAR(100),`birth` DATE	,`first_Name`  VARCHAR(100) NOT NULL,`last_Name`  VARCHAR(100) NOT NULL,`Rank`  double NOT NULL DEFAULT 0,`image_url` VARCHAR(100) NOT NULL DEFAULT 'default image link',`description` VARCHAR(100) NOT NULL DEFAULT 'empty', primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
 			st = conn.createStatement();
-			ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID();");
-			;
 			st.execute(SQL);
 		} catch (SQLException ex) {
 			System.err.println(ex.getMessage());
@@ -62,7 +60,6 @@ public class UserDataJDBC implements UserDataDAO {
 				+ " VALUES (?,?,?,?,?,?);";
 		System.out.println("insert SQL=" + SQL);
 		try {
-			st = conn.createStatement();
 			PreparedStatement preparedStatement = conn.prepareStatement(SQL);
 			preparedStatement.setString(1, user.get_userName());
 			preparedStatement.setString(2, user.get_password());
@@ -87,10 +84,11 @@ public class UserDataJDBC implements UserDataDAO {
 	@Override
 	public void deleteUser(int userId) {
 		try {
-			String SQL = "DELETE from " + tableName + "WHERE id = ?";
+			String SQL = "DELETE from " + tableName + " WHERE id = ?";
 
 			PreparedStatement pre = conn.prepareStatement(SQL);
 			pre.setInt(1, userId);
+			pre.executeUpdate();
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
@@ -128,17 +126,19 @@ public class UserDataJDBC implements UserDataDAO {
 	public Boolean changePassword(int userId, String oldPwd, String newPwd) {
 		try {
 			String GET_PASS_SQL = "SELECT password FROM " + tableName
-					+ "WHERE id = ? );";
-			PreparedStatement preparedStatPassword = conn
-					.prepareStatement(GET_PASS_SQL);
+					+ " WHERE id = ? ;";
+			PreparedStatement preparedStatPassword = conn.prepareStatement(GET_PASS_SQL);
 			preparedStatPassword.setInt(1, userId);
 			// preparedStatPassword.setString(2, oldPwd);
 
 			ResultSet rset = preparedStatPassword.executeQuery();
 
-			String pwd = rset.getString("id");
+			String pwd = null;
+			while(rset.next()){
+			pwd = rset.getString("password");
+			}
 
-			if (pwd != oldPwd) {
+			if (!pwd.equals(oldPwd)) {
 				System.out.print(String
 						.format("The user: %s Enterd wrong password %s",
 								userId, oldPwd));
@@ -147,18 +147,20 @@ public class UserDataJDBC implements UserDataDAO {
 			// Return wrong password messeage
 
 			// TODO Auto-generated method stub
-			String SQL = "UPDATE " + tableName + "SET password = ? "
-					+ "WHERE id = ?;";
+			String SQL = "UPDATE " + tableName + " SET password = ? "
+					+ " WHERE id = ?;";
 			System.out.println("insert SQL=" + SQL);
 
 			PreparedStatement preparedStatement = conn.prepareStatement(SQL);
 			preparedStatement.setString(1, newPwd);
 			preparedStatement.setInt(2, userId);
+			System.out.println(preparedStatement.toString());
 
 			preparedStatement.executeUpdate();
 
 			System.out.println("Created Record");
-		} catch (SQLException ex) {
+		}
+			catch (SQLException ex) {
 			System.err.println(ex.getMessage());
 		}
 		return true;
@@ -178,6 +180,37 @@ public class UserDataJDBC implements UserDataDAO {
 			System.err.println(e.getMessage());
 		}
 		return null;
+	}
+
+	@Override
+	public UserData showUserInfo(int userid) {
+		try{
+		UserData data = null;
+		String SQL = "SELECT `username`, `password`, `email`, `birth`, `first_Name`, `last_Name`, `image_url`, `Rank`, `description` From "
+				+ tableName + " WHERE id = ? ;";
+		PreparedStatement stmnt = conn.prepareStatement(SQL);
+		stmnt.setInt(1, userid);
+		ResultSet rSet=  stmnt.executeQuery();
+		while(rSet.next())
+		{
+			String username = rSet.getString("username");
+			String email = rSet.getString("email");
+			String first_name = rSet.getString("first_Name");
+			String image_url = rSet.getString("image_url");
+			String last_name = rSet.getString("last_Name");
+			Double Rank = rSet.getDouble("Rank");
+			String description = rSet.getString("description");
+			data = new UserData(username, "***", email, null, first_name, last_name);
+		}
+		return data;
+		}
+		
+		
+		catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return null;
+		
 	}
 
 }
