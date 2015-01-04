@@ -1,13 +1,17 @@
 package com.edu.StudentShare.WishList;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.edu.StudentShare.DBConn;
 import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.Product.ProductData;
 
 public class WishDataJDBC implements WishDataDAO {
 
@@ -35,7 +39,7 @@ public class WishDataJDBC implements WishDataDAO {
 			String SQL = "CREATE TABLE IF NOT EXISTS "
 					+ tableName
 					+ ""
-					+ "(id int NOT NULL AUTO_INCREMENT,`user_id` int NOT NULL,`product_id` int NOT NULL,`date_time` DATE	,primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
+					+ "(id int NOT NULL AUTO_INCREMENT,`user_id` int NOT NULL,`product_id` int NOT NULL,`date_time` DATE ,primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
 
 			st.executeUpdate(SQL);
 
@@ -72,6 +76,66 @@ public class WishDataJDBC implements WishDataDAO {
 		}
 
 		return id;
+
+	}
+	private WishData getWishFromResultSet(ResultSet rSet) {
+		WishData data = null;
+
+		try {
+			while (rSet.next()) {
+				int user_id = rSet.getInt("user_id");
+				int product_id = rSet.getInt("product_id");
+				Date date_time = rSet.getDate("date_time");
+				
+	
+
+				data = new WishData(user_id, product_id, date_time);
+			}
+
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+
+		}
+		return data;
+
+	}
+
+	public WishData getWishById(int wishId)
+	{
+		WishData data = null;
+		try {
+			String checkIfBelong = "SELECT * FROM " + tableName
+					+ "  WHERE id = " + wishId;
+			Statement stmnt = conn.createStatement();
+			ResultSet rSet = stmnt.executeQuery(checkIfBelong);
+			data = getWishFromResultSet(rSet);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	public List<WishData> getAllWishById(int userId) {
+		List<WishData> listData = null;
+
+		try {
+			listData = new ArrayList<WishData>();
+
+			String checkIfBelong = "SELECT id FROM " + tableName
+					+ "  WHERE user_id = " + userId;
+			Statement stmnt = conn.createStatement();
+			ResultSet rSet = stmnt.executeQuery(checkIfBelong);
+			while (rSet.next()) {
+				int id = rSet.getInt("id");
+				listData.add(getWishById(id));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return listData;
 
 	}
 

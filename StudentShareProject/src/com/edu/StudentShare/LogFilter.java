@@ -70,7 +70,8 @@ public class LogFilter implements Filter {
 		String[] bits = url.split("/");
 		String page = bits[bits.length - 1];
 		if (page.equals("login.html") || page.equals("Register.html")
-				|| page.equals("Connect") || page.equals("Register")) {
+				|| page.equals("Connect") || page.equals("Register")||
+				page.equals("StudentShareProject")) {
 			return true;
 		}
 		return false;

@@ -38,7 +38,7 @@ public class UserDataJDBC implements UserDataDAO {
 			st.executeUpdate("use my_db");
 			String SQL = "CREATE TABLE IF NOT EXISTS "
 					+ tableName
-					+ "(id int NOT NULL AUTO_INCREMENT,`username` VARCHAR(100) NOT NULL,`password` VARCHAR(100) NOT NULL,`email` VARCHAR(100),`birth` DATE	,`first_Name`  VARCHAR(100) NOT NULL,`last_Name` VARCHAR(100) NOT NULL,`points` double DEFAULT 100, `Rank`  double NOT NULL DEFAULT 0,`image_url` VARCHAR(100) NOT NULL DEFAULT 'default image link',`description` VARCHAR(100) NOT NULL DEFAULT 'empty', primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
+					+ "(id int NOT NULL AUTO_INCREMENT,`username` VARCHAR(100) NOT NULL,`password` VARCHAR(100) NOT NULL,`email` VARCHAR(100),`birth` DATE	,`first_Name`  VARCHAR(100) NOT NULL,`last_Name` VARCHAR(100) NOT NULL,`points` double DEFAULT 100, `Rank`  double NOT NULL DEFAULT 0,`image_url` VARCHAR(10000) NOT NULL DEFAULT 'default image link',`description` VARCHAR(100) NOT NULL DEFAULT 'empty', primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
 			st = conn.createStatement();
 			st.execute(SQL);
 		} catch (SQLException ex) {
