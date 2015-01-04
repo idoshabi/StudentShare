@@ -68,8 +68,8 @@ public class Mess {
 
 	
 	@GET
-	@Path("/showMyMessages")
-	public String showMyMessages(
+	@Path("/SentMesseages")
+	public String SentMesseages(
 	@Context HttpServletRequest req) {
 		int id = 0;
 		List<MessageData> list= null;
@@ -77,7 +77,7 @@ public class Mess {
 			id = DBHelper.retiveUserId(req);
 			if (id != 0) {
 				
-				list = messageJdbc.getNessagesByUser(id);
+				list = messageJdbc.getSentMessagesByUser(id);
 
 			} else {
 				return "Not connected";
@@ -89,6 +89,27 @@ public class Mess {
 		return list.toString();
 	}
 	
+	@GET
+	@Path("/RecivedMesseages")
+	public String RecivedMesseages(
+	@Context HttpServletRequest req) {
+		int id = 0;
+		List<MessageData> list= null;
+		try {
+			id = DBHelper.retiveUserId(req);
+			if (id != 0) {
+				
+				list = messageJdbc.getRecivedMessagesByUser(id);
+
+			} else {
+				return "Not connected";
+			}
+		} catch (Exception e) {
+			LogFilter.log.error("Failed at user" + e);
+		}
+
+		return list.toString();
+	}
 	@POST
 	@Path("/delete")
 	public String deleteMesseage(

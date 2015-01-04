@@ -2,7 +2,7 @@ package com.edu.StudentShare.Transaction;
 
 public interface TransactionDataDAO {
 		
-	void createTable(String TableName);
+	void createTable();
 	
 	int makeTransaction(TransactionData data);
 	

@@ -3,12 +3,28 @@ package com.edu.StudentShare;
 import java.io.IOException;
 import java.util.logging.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import sun.util.logging.resources.logging;
 
 public class Utils {
 	private static Logger logger = null;
 	private static FileHandler fh = null;
 
+	public static int retiveUserId(HttpServletRequest req) {
+		HttpSession session = req.getSession(true);
+		Object userId = session.getAttribute("user_id");
+
+		if (userId != null) {
+
+			int id = (int) userId;
+			return id;
+
+		} else {
+			return 0;
+		}
+	}
 	public Utils(String path) {
 		try {
 			if (path == null)

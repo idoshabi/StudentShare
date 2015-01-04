@@ -10,7 +10,7 @@ public interface ProductDataDAO {
 	
 	public Boolean deleteProduct(int userid, int productId);
 	
-	public Boolean buyProduct(int buyerId, int product_id);
+	public int buyProduct(int buyerId, int product_id);
 	
 	public ProductData getProductInfo(int id);
 	
@@ -18,5 +18,5 @@ public interface ProductDataDAO {
 	
 	public Boolean updateProduct(int productId, ProductData prod);
 	
-	
+	public List<String> getSellers();
 }

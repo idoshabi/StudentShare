@@ -1,4 +1,4 @@
-package com.edu.StudentShare.student;
+package com.edu.StudentShare.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +11,8 @@ import java.util.List;
 import java.sql.Statement;
 
 import com.edu.StudentShare.DBConn;
+import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.Message.MessageData;
 
 public class UserDataJDBC implements UserDataDAO {
 
@@ -36,7 +38,7 @@ public class UserDataJDBC implements UserDataDAO {
 			st.executeUpdate("use my_db");
 			String SQL = "CREATE TABLE IF NOT EXISTS "
 					+ tableName
-					+ "(id int NOT NULL AUTO_INCREMENT,`username` VARCHAR(100) NOT NULL,`password` VARCHAR(100) NOT NULL,`email` VARCHAR(100),`birth` DATE	,`first_Name`  VARCHAR(100) NOT NULL,`last_Name`  VARCHAR(100) NOT NULL,`Rank`  double NOT NULL DEFAULT 0,`image_url` VARCHAR(100) NOT NULL DEFAULT 'default image link',`description` VARCHAR(100) NOT NULL DEFAULT 'empty', primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
+					+ "(id int NOT NULL AUTO_INCREMENT,`username` VARCHAR(100) NOT NULL,`password` VARCHAR(100) NOT NULL,`email` VARCHAR(100),`birth` DATE	,`first_Name`  VARCHAR(100) NOT NULL,`last_Name` VARCHAR(100) NOT NULL,`points` double DEFAULT 100, `Rank`  double NOT NULL DEFAULT 0,`image_url` VARCHAR(100) NOT NULL DEFAULT 'default image link',`description` VARCHAR(100) NOT NULL DEFAULT 'empty', primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
 			st = conn.createStatement();
 			st.execute(SQL);
 		} catch (SQLException ex) {
@@ -69,9 +71,10 @@ public class UserDataJDBC implements UserDataDAO {
 			preparedStatement.setString(6, user.get_last_name());
 			preparedStatement.executeUpdate();
 			st = conn.createStatement();
-			ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID() as last_id;");
+			ResultSet rs = st
+					.executeQuery("SELECT LAST_INSERT_ID() as last_id;");
 			while (rs.next()) {
-				id =  Integer.parseInt(rs.getString("last_id"));		
+				id = Integer.parseInt(rs.getString("last_id"));
 			}
 			System.out.println("Created Record");
 		} catch (SQLException ex) {
@@ -79,6 +82,48 @@ public class UserDataJDBC implements UserDataDAO {
 			return 0;
 		}
 		return id;
+	}
+
+	public Boolean UpdateUserPoints(int userId, double amount) {
+		int id = 0;
+		try {
+			String SQL = "UPDATE " + tableName + " SET points = points+ ? "
+					+ " WHERE id = ?;";
+			PreparedStatement pre = conn.prepareStatement(SQL);
+
+			pre.setDouble(1, amount);
+			pre.setInt(2, userId);
+
+			pre.executeUpdate();
+
+			return true;
+
+		} catch (Exception ex) {
+			LogFilter.log.error("Failed at createNewProduct with "
+					+ ex.toString());
+
+			return false;
+		}
+
+	}
+
+	public double getNumberOfPoints(int userId) {
+		double points = 0;
+
+		try {
+			String selectpointsFromBuyer = "Select points FROM " + tableName
+					+ " WHERE id =" + userId;
+			java.sql.PreparedStatement stmnt = conn
+					.prepareStatement(selectpointsFromBuyer);
+			ResultSet result = stmnt.executeQuery(selectpointsFromBuyer);
+			while (result.next()) {
+				points = result.getDouble("points");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return points;
 	}
 
 	@Override
@@ -127,15 +172,16 @@ public class UserDataJDBC implements UserDataDAO {
 		try {
 			String GET_PASS_SQL = "SELECT password FROM " + tableName
 					+ " WHERE id = ? ;";
-			PreparedStatement preparedStatPassword = conn.prepareStatement(GET_PASS_SQL);
+			PreparedStatement preparedStatPassword = conn
+					.prepareStatement(GET_PASS_SQL);
 			preparedStatPassword.setInt(1, userId);
 			// preparedStatPassword.setString(2, oldPwd);
 
 			ResultSet rset = preparedStatPassword.executeQuery();
 
 			String pwd = null;
-			while(rset.next()){
-			pwd = rset.getString("password");
+			while (rset.next()) {
+				pwd = rset.getString("password");
 			}
 
 			if (!pwd.equals(oldPwd)) {
@@ -159,8 +205,7 @@ public class UserDataJDBC implements UserDataDAO {
 			preparedStatement.executeUpdate();
 
 			System.out.println("Created Record");
-		}
-			catch (SQLException ex) {
+		} catch (SQLException ex) {
 			System.err.println(ex.getMessage());
 		}
 		return true;
@@ -184,33 +229,36 @@ public class UserDataJDBC implements UserDataDAO {
 
 	@Override
 	public UserData showUserInfo(int userid) {
-		try{
-		UserData data = null;
-		String SQL = "SELECT `username`, `password`, `email`, `birth`, `first_Name`, `last_Name`, `image_url`, `Rank`, `description` From "
-				+ tableName + " WHERE id = ? ;";
-		PreparedStatement stmnt = conn.prepareStatement(SQL);
-		stmnt.setInt(1, userid);
-		ResultSet rSet=  stmnt.executeQuery();
-		while(rSet.next())
-		{
-			String username = rSet.getString("username");
-			String email = rSet.getString("email");
-			String first_name = rSet.getString("first_Name");
-			String image_url = rSet.getString("image_url");
-			String last_name = rSet.getString("last_Name");
-			Double Rank = rSet.getDouble("Rank");
-			String description = rSet.getString("description");
-			data = new UserData(username, "***", email, null, first_name, last_name);
+		try {
+			UserData data = null;
+			String SQL = "SELECT `username`, `password`, `email`, `birth`, `first_Name`, `last_Name`, `image_url`, `points`, `Rank`, `description` From "
+					+ tableName + " WHERE id = ? ;";
+			PreparedStatement stmnt = conn.prepareStatement(SQL);
+			stmnt.setInt(1, userid);
+			ResultSet rSet = stmnt.executeQuery();
+			while (rSet.next()) {
+				String username = rSet.getString("username");
+				String email = rSet.getString("email");
+				String first_name = rSet.getString("first_Name");
+				String image_url = rSet.getString("image_url");
+				String password = rSet.getString("password");
+				double points = rSet.getDouble("points");
+				Date date = rSet.getDate("birth");
+				String last_name = rSet.getString("last_Name");
+				double Rank = rSet.getDouble("Rank");
+				String description = rSet.getString("description");
+				
+				data = new UserData(username, password, email, date, first_name,
+						last_name, Rank, points, image_url);
+			}
+			return data;
 		}
-		return data;
-		}
-		
-		
+
 		catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 		return null;
-		
+
 	}
 
 }

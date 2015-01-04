@@ -24,6 +24,9 @@ public class ProductData {
 	this.description = description;
 	this.imageUrl = image;
 	}
+	public ProductData() {
+		// TODO Auto-generated constructor stub
+	}
 	public String get_productName() {
 		return _productName;
 	}
@@ -39,7 +42,7 @@ public class ProductData {
 	public double getPrice() {
 		return price;
 	}
-	public void setPrice(short price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 	public int get_quntity() {

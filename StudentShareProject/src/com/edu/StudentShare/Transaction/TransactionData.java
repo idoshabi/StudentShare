@@ -4,11 +4,28 @@ import java.sql.Date;
 
 public class TransactionData {
 
+		@Override
+	public String toString() {
+		return "TransactionData [sellerId=" + sellerId + ", buyerId=" + buyerId
+				+ ", productId=" + productId + ", point_amount=" + point_amount
+				+ ", transactionTime=" + transactionTime + "]";
+	}
+		public TransactionData(int sellerId, int buyerId, int productId,
+			double point_amount, Date transactionTime) {
+		super();
+		this.sellerId = sellerId;
+		this.buyerId = buyerId;
+		this.productId = productId;
+		this.point_amount = point_amount;
+		this.transactionTime = transactionTime;
+	}
 		private int sellerId;
 		private int buyerId;
 		private int productId;
-		private int point_amount;
+		private double point_amount;
 		private Date transactionTime;
+		 
+		
 		public int getSellerId() {
 			return sellerId;
 		}
@@ -27,7 +44,7 @@ public class TransactionData {
 		public void setProductId(int productId) {
 			this.productId = productId;
 		}
-		public int getPoint_amount() {
+		public double getPoint_amount() {
 			return point_amount;
 		}
 		public void setPoint_amount(int point_amount) {

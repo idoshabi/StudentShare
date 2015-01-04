@@ -45,11 +45,32 @@ public class MessageDataJDBC implements MessageDataDAO {
 
 	}
 
-	public List<MessageData> getNessagesByUser(int user_id) {
+	public List<MessageData> getSentMessagesByUser(int user_id) {
 		List<MessageData> dataList = new ArrayList<MessageData>();
 		try {
 			String SQL = "Select * from " + tablenName
 					+ " Where senderId = ? ;";
+
+			PreparedStatement stmnt = conn.prepareStatement(SQL);
+			stmnt.setInt(1, user_id);
+			ResultSet rSet = stmnt.executeQuery();
+
+			while (rSet.next()) {
+				dataList.add(getMesseageFromResultSet(rSet));
+			}
+
+			return dataList;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return dataList;
+	}
+
+	public List<MessageData> getRecivedMessagesByUser(int user_id) {
+		List<MessageData> dataList = new ArrayList<MessageData>();
+		try {
+			String SQL = "Select * FROM " + tablenName
+					+ " Where recipientId = ? ;";
 
 			PreparedStatement stmnt = conn.prepareStatement(SQL);
 			stmnt.setInt(1, user_id);

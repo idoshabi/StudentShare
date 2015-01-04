@@ -1,4 +1,4 @@
-package com.edu.StudentShare.student;
+package com.edu.StudentShare.User;
 
 import java.sql.Date;
 import java.util.List;

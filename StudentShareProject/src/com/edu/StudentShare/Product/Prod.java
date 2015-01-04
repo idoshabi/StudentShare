@@ -1,6 +1,7 @@
 package com.edu.StudentShare.Product;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
@@ -17,13 +18,15 @@ import javax.ws.rs.core.MediaType;
 
 import com.edu.StudentShare.LogFilter;
 import com.edu.StudentShare.Utils;
+import com.edu.StudentShare.Redis.Products;
+import com.sun.research.ws.wadl.Response;
 
 /**
  * Servlet implementation class UserRegister
  */
 @Path("/Product")
 public class Prod {
-	static ProductDataJDBC productJdbc;
+	static public ProductDataJDBC productJdbc;
 	static int user_id;
 
 	public Prod() {
@@ -45,7 +48,7 @@ public class Prod {
 		int id = 0;
 		int product_id = 0;
 		try {
-			id = retiveUserId(req);
+			id = Utils.retiveUserId(req);
 			if (id != 0) {
 				java.sql.Date sqlDate = new java.sql.Date(
 						System.currentTimeMillis());
@@ -65,28 +68,37 @@ public class Prod {
 
 	}
 
-	public int retiveUserId(HttpServletRequest req) {
-		HttpSession session = req.getSession(true);
-		Object userId = session.getAttribute("user_id");
 
-		if (userId != null) {
-
-			int id = (int) userId;
-			return id;
-
-		} else {
-			return 0;
+	
+	@GET
+	@Path("/getSellers")
+	public String getSellers
+			(@Context HttpServletRequest req) {
+		int id = 0;
+		try {
+			id = Utils.retiveUserId(req);
+			if (id != 0) {
+				List<String> list= productJdbc.getSellers();
+				
+				return list.toString();
+			} else {
+				return "Not connected";
+			}
+		} catch (Exception e) {
+			LogFilter.log.error("Failed at user" + e);
 		}
-	}
 
+		return "Deleted";
+	}
+	
 	@POST
 	@Path("/delete")
 	public String deleteProduct(
-
-	@FormParam("product_id") int productId, @Context HttpServletRequest req) {
+			@FormParam("product_id") int productId,
+			@Context HttpServletRequest req) {
 		int id = 0;
 		try {
-			id = retiveUserId(req);
+			id = Utils.retiveUserId(req);
 			if (id != 0) {
 				productJdbc.deleteProduct(id, productId);
 
@@ -100,23 +112,17 @@ public class Prod {
 		return "Deleted";
 	}
 
-	@GET
-	@Path("/search")
-	public String SearchProduct(
-			@QueryParam("searchPattren") String searchPattren,
+	@POST
+	@Path("/buy")
+	public String buyProduct(
+			@FormParam("product_id") int productId,
 			@Context HttpServletRequest req) {
-		String total = null;
 		int id = 0;
 		try {
-			id = retiveUserId(req);
+			id = Utils.retiveUserId(req);
 			if (id != 0) {
+				productJdbc.buyProduct(id, productId);
 
-				List<Integer> list = productJdbc.searchProduct(searchPattren);
-				for (Integer item : list) {
-					ProductData data = productJdbc.getProductInfo(item);
-					System.out.println(item);
-					total += " " + data.toString();
-				}
 			} else {
 				return "Not connected";
 			}
@@ -124,7 +130,52 @@ public class Prod {
 			LogFilter.log.error("Failed at user" + e);
 		}
 
-		return total;
+		return "Successfully purchased ";
+	}
+	@GET
+	@Path("/getTop")
+	public String getTop(
+			@QueryParam("max") int max,
+			@Context HttpServletRequest req) {
+		int id = 0;
+		try {
+			id = Utils.retiveUserId(req);
+			if (id != 0) {
+				ArrayList<ProductData> list = Products.getTopProducts( max);
+				return list.toString();
+			} else {
+				return "Not connected";
+			}
+		} catch (Exception e) {
+			LogFilter.log.error("Failed at user" + e);
+		}
+
+		return "Successfully purchased ";
+	}
+	@GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+
+	public ProductData SearchProduct(
+			@QueryParam("searchPattren") String searchPattren,
+			@Context HttpServletRequest req) {
+		List<ProductData> listdata = null;
+		String total = "Result: ";
+		listdata = new ArrayList<ProductData>();
+		int id = 0;
+		try {
+
+			List<Integer> list = productJdbc.searchProduct(searchPattren);
+			for (Integer item : list) {
+				listdata.add(productJdbc.getProductInfo(item));
+				System.out.println(item);
+
+			}
+		} catch (Exception e) {
+			LogFilter.log.error("Failed at user" + e);
+		}
+		return listdata.get(0);
+
 	}
 
 	@POST
@@ -136,7 +187,7 @@ public class Prod {
 		}
 		ProductData data = null;
 		try {
-			int id = retiveUserId(req);
+			int id = Utils.retiveUserId(req);
 			if (id != 0) {
 				data = productJdbc.getProductInfo(productId);
 
@@ -149,15 +200,14 @@ public class Prod {
 
 		return data.toString();
 	}
+
 	@GET
 	@Path("/myProducts")
-	public String myProducts(
-			@Context HttpServletRequest req) {
-		{
-		}
+	public String myProducts(@Context HttpServletRequest req) {
+
 		List<ProductData> data = null;
 		try {
-			int id = retiveUserId(req);
+			int id = Utils.retiveUserId(req);
 			if (id != 0) {
 				data = productJdbc.getProductsByUser(id);
 
@@ -167,7 +217,7 @@ public class Prod {
 		} catch (Exception e) {
 			LogFilter.log.error("Failed at user" + e);
 		}
-		
+
 		return data.toString();
 	}
 }

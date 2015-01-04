@@ -14,6 +14,9 @@ import java.util.ListIterator;
 
 import com.edu.StudentShare.DBConn;
 import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.Redis.Products;
+import com.edu.StudentShare.Transaction.Transac;
+import com.edu.StudentShare.Transaction.TransactionData;
 
 public class ProductDataJDBC implements ProductDataDAO {
 
@@ -30,15 +33,15 @@ public class ProductDataJDBC implements ProductDataDAO {
 	public List<Integer> searchProduct(String searchPattren) {
 		List<Integer> list = null;
 		try {
-			
+
 			list = new ArrayList<>();
-			String SQL = "SELECT * FROM " + tablenName+" WHERE productName LIKE '%"+searchPattren+"%' ;";
+			String SQL = "SELECT * FROM " + tablenName
+					+ " WHERE productName LIKE '%" + searchPattren + "%' ;";
 			Statement stmnt = conn.createStatement();
 			ResultSet rSet = stmnt.executeQuery(SQL);
-			
-			//ResultSet rSet = stmnt.executeQuery();
-			while (rSet.next())
-			{
+
+			// ResultSet rSet = stmnt.executeQuery();
+			while (rSet.next()) {
 				list.add(rSet.getInt("id"));
 			}
 
@@ -76,10 +79,13 @@ public class ProductDataJDBC implements ProductDataDAO {
 			while (rs.next()) {
 				id = Integer.parseInt(rs.getString("last_id"));
 			}
+
 		} catch (Exception ex) {
 			LogFilter.log.error("Failed at createNewProduct with "
 					+ ex.toString());
 		}
+
+		Products.setProduct(id, prod);
 
 		return id;
 
@@ -116,20 +122,64 @@ public class ProductDataJDBC implements ProductDataDAO {
 		return true;
 	}
 
-	@Override
-	public Boolean buyProduct(int buyerId, int product_id) {
+	private Boolean checkIfProductAvailableAndDescrease(int productId,
+			ProductData ProdData) {
 		try {
-			String sqlProduct = "Update " + tablenName
-					+ " SET  soldCount = soldCount + 1 Where id = ?";
-			PreparedStatement stmnt = conn.prepareStatement(sqlProduct);
-			stmnt.setInt(1, product_id);
-			stmnt.executeUpdate();
+			if (ProdData.get_quntity() > 0) {
+				String soldCountSql = "Update " + tablenName
+						+ " SET  soldCount = soldCount + 1 Where id = ?";
+				PreparedStatement stmntProduct = conn
+						.prepareStatement(soldCountSql);
+				stmntProduct.setInt(1, productId);
+				stmntProduct.executeUpdate();
+				String quntitySql = "Update " + tablenName
+						+ " SET  quantity = quantity  - 1 Where id = ?";
+
+				PreparedStatement quantitystmntProduct = conn
+						.prepareStatement(quntitySql);
+				quantitystmntProduct.setInt(1, productId);
+				quantitystmntProduct.executeUpdate();
+
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
+	@Override
+	public int buyProduct(int buyerId, int product_id) {
+		int transactionId = 0;
+		try {
+			String SQL = "Select * from " + tablenName + " where id = "
+					+ product_id;
+			Statement stmnt = conn.createStatement();
+			ResultSet rSet = stmnt.executeQuery(SQL);
+			ProductData ProdData = getProductFromResultSet(rSet);
+
+			if (checkIfProductAvailableAndDescrease(product_id, ProdData)) {
+				// Transaction part
+
+				TransactionData TransData = new TransactionData(
+						ProdData.get_seller_id(), buyerId, product_id,
+						ProdData.getPrice(), ProdData.getPostTime());
+
+				transactionId = Transac.transactionJdbc
+						.makeTransaction(TransData);
+				if (transactionId == 0) {
+					System.out.println("Failed at product_id: " + product_id);
+				}
+				return transactionId;
+			}
 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		return 0;
 
-		return null;
 	}
 
 	@Override
@@ -159,24 +209,24 @@ public class ProductDataJDBC implements ProductDataDAO {
 	public ProductData getProductInfo(int id) {
 		ProductData data = null;
 		try {
-			String SQL = "Select * FROM " +  tablenName + " Where id = ? ;";
+			String SQL = "Select * FROM " + tablenName + " Where id = ? ;";
 			PreparedStatement stmnt = conn.prepareStatement(SQL);
 			stmnt.setInt(1, id);
 			ResultSet rSet = stmnt.executeQuery();
-			while (rSet.next()) {
+			
 				data = getProductFromResultSet(rSet);
-			}
+			
 		} catch (SQLException ex) {
-			System.err.println(ex.getMessage());
+			System.err.println( ex.getMessage());
 		}
 		return data;
 	}
 
-		private ProductData getProductFromResultSet (ResultSet rSet){
-			ProductData data = null;
-			
-			try {
-				
+	private ProductData getProductFromResultSet(ResultSet rSet) {
+		ProductData data = null;
+
+		try {
+			while (rSet.next()) {
 				String productName = rSet.getString("productName");
 				double price = rSet.getDouble("price");
 				int soldCount = rSet.getInt("soldCount");
@@ -186,40 +236,60 @@ public class ProductDataJDBC implements ProductDataDAO {
 				String description = rSet.getString("description");
 				int quantity = rSet.getInt("quantity");
 
-				 data = new ProductData(productName, price, sellerId, quantity,
+				data = new ProductData(productName, price, sellerId, quantity,
 						date, soldCount, description, image_url);
-				return data;
-				
-			} catch (SQLException e) {
-				System.err.println(e.getMessage());
-
 			}
 			return data;
-		
-		}
-		
-	@Override
-	public List <ProductData> getProductsByUser(int user_id) {
-			
-		List<ProductData> dataList = new ArrayList<ProductData>();
-	
-		try {
-		String SQL  = "Select * from " + tablenName + " Where sellerId = ? ;";
-		
-		PreparedStatement stmnt = conn.prepareStatement(SQL);
-		stmnt.setInt(1, user_id);
-		ResultSet rSet = stmnt.executeQuery();
-		
-		while (rSet.next()){
-			dataList.add(getProductFromResultSet(rSet));
-		} 
-		
-		return dataList;
-	}
-		catch (SQLException e) {
+
+		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 
 		}
+		return data;
+
+	}
+
+	@Override
+	public List<ProductData> getProductsByUser(int user_id) {
+
+		List<ProductData> dataList = new ArrayList<ProductData>();
+
+		try {
+			String SQL = "Select * from " + tablenName
+					+ " Where sellerId = ? ;";
+
+			PreparedStatement stmnt = conn.prepareStatement(SQL);
+			stmnt.setInt(1, user_id);
+			ResultSet rSet = stmnt.executeQuery();
+
+			dataList.add(getProductFromResultSet(rSet));
+
+			return dataList;
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+
+		}
+		return dataList;
+	}
+
+	public List<String> getSellers(){
+		String SQL = "SELECT distinct users.username FROM users INNER JOIN product ON users.id=product.sellerId";
+		
+		List<String> dataList = null;
+		try {
+			dataList = new ArrayList<String>();
+			Statement stmnt = conn.createStatement();
+
+			ResultSet rSet = stmnt.executeQuery(SQL);
+			while (rSet.next())
+			{
+				dataList.add(rSet.getString("username"));
+			}
+			
+		} catch (SQLException err) {
+			err.printStackTrace();
+		}
+		
 		return dataList;
 	}
 }

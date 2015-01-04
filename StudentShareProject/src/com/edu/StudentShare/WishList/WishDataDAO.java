@@ -2,12 +2,10 @@ package com.edu.StudentShare.WishList;
 
 public interface WishDataDAO {
 
-		void createTable(String tableName);
+		void createTable();
 		
 		int createNewWish(WishData data);
 		
-		Boolean deleteNewWish(int wishId);
-
-		
+		Boolean deleteWish(int userId, int wishId);
 		
 	}
