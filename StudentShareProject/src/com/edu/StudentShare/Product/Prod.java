@@ -15,11 +15,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.edu.StudentShare.LogFilter;
 import com.edu.StudentShare.Utils;
 import com.edu.StudentShare.Redis.Products;
-import com.sun.research.ws.wadl.Response;
+import com.edu.StudentShare.User.User;
+import com.edu.StudentShare.User.UserData;
+import com.edu.StudentShare.User.UserDataJDBC;
+
 
 /**
  * Servlet implementation class UserRegister
@@ -27,6 +31,7 @@ import com.sun.research.ws.wadl.Response;
 @Path("/Product")
 public class Prod {
 	static public ProductDataJDBC productJdbc;
+
 	static int user_id;
 
 	public Prod() {
@@ -41,7 +46,7 @@ public class Prod {
 
 	@POST
 	@Path("/add")
-	public String Addproduct(@FormParam("productName") String productName,
+	public Response Addproduct(@FormParam("productName") String productName,
 			@FormParam("price") double price,
 			@FormParam("description") String description,
 			@FormParam("quntity") int quntity, @Context HttpServletRequest req) {
@@ -49,52 +54,47 @@ public class Prod {
 		int product_id = 0;
 		try {
 			id = Utils.retiveUserId(req);
-			if (id != 0) {
+			
 				java.sql.Date sqlDate = new java.sql.Date(
 						System.currentTimeMillis());
 				ProductData data = new ProductData(productName, price, id,
 						quntity, sqlDate, 0, description, "url");
 				product_id = productJdbc.createNewProduct(data);
 
-			} else {
-				return "Not connected";
-			}
+			
 
 		} catch (Exception e) {
 			LogFilter.log.error("Failed at user" + e);
+			return Response.status(400).entity(e.toString()).build();
+
 		}
-		return "<html> " + "<title>" + "Your id is" + "</title>" + "<body><h1>"
-				+ "Your id is:" + product_id + "</body></h1>" + "</html> ";
+		String returnString =  "Your id is: " +product_id ;
+
+		return Response.status(201).entity(returnString).build();
 
 	}
 
-
-	
 	@GET
 	@Path("/getSellers")
-	public String getSellers
-			(@Context HttpServletRequest req) {
+	@Produces(MediaType.APPLICATION_JSON)
+
+	public String getSellers(@Context HttpServletRequest req) {
 		int id = 0;
+		List<String> list = null;
 		try {
-			id = Utils.retiveUserId(req);
-			if (id != 0) {
-				List<String> list= productJdbc.getSellers();
-				
-				return list.toString();
-			} else {
-				return "Not connected";
-			}
+
+			list = productJdbc.getSellers();
+
 		} catch (Exception e) {
 			LogFilter.log.error("Failed at user" + e);
 		}
 
-		return "Deleted";
+		return Utils.toJson(list);
 	}
-	
+
 	@POST
 	@Path("/delete")
-	public String deleteProduct(
-			@FormParam("product_id") int productId,
+	public String deleteProduct(@FormParam("product_id") int productId,
 			@Context HttpServletRequest req) {
 		int id = 0;
 		try {
@@ -114,15 +114,15 @@ public class Prod {
 
 	@POST
 	@Path("/buy")
-	public String buyProduct(
-			@FormParam("product_id") int productId,
+	public String buyProduct(@FormParam("product_id") int productId,
 			@Context HttpServletRequest req) {
 		int id = 0;
 		try {
 			id = Utils.retiveUserId(req);
 			if (id != 0) {
 				productJdbc.buyProduct(id, productId);
-
+				User.userJdbc.UpdateUserRank(id, 0.1); 
+				
 			} else {
 				return "Not connected";
 			}
@@ -132,31 +132,30 @@ public class Prod {
 
 		return "Successfully purchased ";
 	}
+
 	@GET
 	@Path("/getTop")
-	public String getTop(
-			@QueryParam("max") int max,
+	@Produces(MediaType.APPLICATION_JSON)
+
+	public String getTop(@QueryParam("max") int max,
 			@Context HttpServletRequest req) {
 		int id = 0;
+		ArrayList<ProductData> list = null;
 		try {
-			id = Utils.retiveUserId(req);
-			if (id != 0) {
-				ArrayList<ProductData> list = Products.getTopProducts( max);
-				return list.toString();
-			} else {
-				return "Not connected";
-			}
+
+			list = Products.getTopProducts(max);
+
 		} catch (Exception e) {
 			LogFilter.log.error("Failed at user" + e);
 		}
 
-		return "Successfully purchased ";
+		return Utils.toJson(list);
 	}
+
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
-
-	public ProductData SearchProduct(
+	public String SearchProduct(
 			@QueryParam("searchPattren") String searchPattren,
 			@Context HttpServletRequest req) {
 		List<ProductData> listdata = null;
@@ -174,13 +173,15 @@ public class Prod {
 		} catch (Exception e) {
 			LogFilter.log.error("Failed at user" + e);
 		}
-		return listdata.get(0);
+
+		return Utils.toJson(listdata);
 
 	}
 
 	@POST
 	@Path("/show")
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+
 	public String showProduct(@FormParam("product_id") int productId,
 			@Context HttpServletRequest req) {
 		{
@@ -188,36 +189,31 @@ public class Prod {
 		ProductData data = null;
 		try {
 			int id = Utils.retiveUserId(req);
-			if (id != 0) {
-				data = productJdbc.getProductInfo(productId);
+			data = productJdbc.getProductInfo(productId);
 
-			} else {
-				return "Not connected";
-			}
 		} catch (Exception e) {
 			LogFilter.log.error("Failed at user" + e);
 		}
 
-		return data.toString();
+		return Utils.toJson(data);
 	}
 
 	@GET
 	@Path("/myProducts")
+	@Produces(MediaType.APPLICATION_JSON)
+
 	public String myProducts(@Context HttpServletRequest req) {
 
 		List<ProductData> data = null;
 		try {
 			int id = Utils.retiveUserId(req);
-			if (id != 0) {
-				data = productJdbc.getProductsByUser(id);
 
-			} else {
-				return "Not connected";
-			}
+			data = productJdbc.getProductsByUser(id);
+
 		} catch (Exception e) {
 			LogFilter.log.error("Failed at user" + e);
 		}
 
-		return data.toString();
+		return Utils.toJson(data);
 	}
 }

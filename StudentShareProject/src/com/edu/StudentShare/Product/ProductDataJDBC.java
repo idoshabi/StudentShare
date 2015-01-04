@@ -17,6 +17,7 @@ import com.edu.StudentShare.LogFilter;
 import com.edu.StudentShare.Redis.Products;
 import com.edu.StudentShare.Transaction.Transac;
 import com.edu.StudentShare.Transaction.TransactionData;
+import com.edu.StudentShare.User.User;
 
 public class ProductDataJDBC implements ProductDataDAO {
 
@@ -166,6 +167,10 @@ public class ProductDataJDBC implements ProductDataDAO {
 				TransactionData TransData = new TransactionData(
 						ProdData.get_seller_id(), buyerId, product_id,
 						ProdData.getPrice(), ProdData.getPostTime());
+				
+				User.userJdbc.UpdateUserRank(buyerId, 0.1); 
+
+				User.userJdbc.UpdateUserRank(ProdData.get_seller_id(), 1); 
 
 				transactionId = Transac.transactionJdbc
 						.makeTransaction(TransData);

@@ -58,8 +58,8 @@ public class UserDataJDBC implements UserDataDAO {
 		int id = 0;
 		String SQL = "INSERT INTO "
 				+ tableName
-				+ " (`username`, `password`, `email`, `birth`, `first_Name`, `last_Name`)"
-				+ " VALUES (?,?,?,?,?,?);";
+				+ " (`username`, `password`, `email`, `birth`, `first_Name`, `last_Name`, `image_url`)"
+				+ " VALUES (?,?,?,?,?,?,?);";
 		System.out.println("insert SQL=" + SQL);
 		try {
 			PreparedStatement preparedStatement = conn.prepareStatement(SQL);
@@ -69,6 +69,8 @@ public class UserDataJDBC implements UserDataDAO {
 			preparedStatement.setDate(4, (java.sql.Date) user.get_birthday());
 			preparedStatement.setString(5, user.get_first_name());
 			preparedStatement.setString(6, user.get_last_name());
+			preparedStatement.setString(7, user.get_imgUrl());
+
 			preparedStatement.executeUpdate();
 			st = conn.createStatement();
 			ResultSet rs = st
@@ -99,14 +101,35 @@ public class UserDataJDBC implements UserDataDAO {
 			return true;
 
 		} catch (Exception ex) {
-			LogFilter.log.error("Failed at createNewProduct with "
+			LogFilter.log.error("Failed at UpdateUserPoints with "
 					+ ex.toString());
 
 			return false;
 		}
 
 	}
+	public Boolean UpdateUserRank(int userId, double amount) {
+		int id = 0;
+		try {
+			String SQL = "UPDATE " + tableName + " SET Rank = Rank+ ? "
+					+ " WHERE id = ?;";
+			PreparedStatement pre = conn.prepareStatement(SQL);
 
+			pre.setDouble(1, amount);
+			pre.setInt(2, userId);
+
+			pre.executeUpdate();
+
+			return true;
+
+		} catch (Exception ex) {
+			LogFilter.log.error("Failed at UpdateUserRank with "
+					+ ex.toString());
+
+			return false;
+		}
+
+	}
 	public double getNumberOfPoints(int userId) {
 		double points = 0;
 

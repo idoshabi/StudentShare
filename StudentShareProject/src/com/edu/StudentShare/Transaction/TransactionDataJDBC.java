@@ -52,6 +52,10 @@ public class TransactionDataJDBC implements TransactionDataDAO {
 						.println("Failed at makeTransaction,  user dont have enght points");
 				return 0;
 			}
+			
+			
+			
+			
 
 			// Decrease the buyer points first in order to catch any fraud
 			// issues

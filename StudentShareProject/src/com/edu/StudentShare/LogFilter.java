@@ -9,7 +9,7 @@ import javax.servlet.http.*;
 import com.edu.StudentShare.Message.Mess;
 import com.edu.StudentShare.Product.Prod;
 import com.edu.StudentShare.Product.ProductData;
-import com.edu.StudentShare.Redis.PoolConnection;
+import com.edu.StudentShare.Redis.ConnectionPool;
 import com.edu.StudentShare.Redis.OnlineUsers;
 import com.edu.StudentShare.Redis.Products;
 import com.edu.StudentShare.Redis.ShopptingCart;
@@ -28,7 +28,7 @@ public class LogFilter implements Filter {
 
 	public void init(FilterConfig config) throws ServletException {
 		// Get init parameter
-		PoolConnection pool = new PoolConnection();
+		ConnectionPool pool = new ConnectionPool();
 
 		String logPath = config.getInitParameter("log_path");
 

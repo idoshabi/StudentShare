@@ -6,12 +6,36 @@ import java.util.logging.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+
 import sun.util.logging.resources.logging;
 
 public class Utils {
 	private static Logger logger = null;
 	private static FileHandler fh = null;
+	private static Gson json = null;
 
+	public static java.sql.Date TosqlDate(java.util.Date utilDate) {
+		java.sql.Date sqlDate = null;
+		try {
+			sqlDate = new java.sql.Date(utilDate.getTime());
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sqlDate;
+
+	}
+	// ConvertToJson
+	public static String toJson(Object obj) {
+		if (json == null) {
+			json = new Gson();
+		}
+		String jsonString = json.toJson(obj);
+		
+		return jsonString;
+	}
 	public static int retiveUserId(HttpServletRequest req) {
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");

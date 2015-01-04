@@ -51,6 +51,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/idos/Downloads/commons-pool2-2.3-bin/commons-pool2-2.3/commons-pool2-2.3-javadoc.jar"/>
-	<classpathentry kind="lib" path="src/com/edu/StudentShare/Redis/ConnectionPool.java"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
