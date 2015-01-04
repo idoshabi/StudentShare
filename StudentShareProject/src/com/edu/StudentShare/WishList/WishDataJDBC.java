@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.edu.StudentShare.DBConn;
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 import com.edu.StudentShare.Product.ProductData;
 
 public class WishDataJDBC implements WishDataDAO {
@@ -35,7 +35,7 @@ public class WishDataJDBC implements WishDataDAO {
 			st.executeUpdate("create database if not exists my_db");
 			st.executeUpdate("use my_db");
 			String total;
-			LogFilter.log.error(String.format("user %s password", tableName));
+			AuthFilter.log.error(String.format("user %s password", tableName));
 			String SQL = "CREATE TABLE IF NOT EXISTS "
 					+ tableName
 					+ ""
@@ -71,7 +71,7 @@ public class WishDataJDBC implements WishDataDAO {
 				id = Integer.parseInt(rs.getString("last_id"));
 			}
 		} catch (Exception ex) {
-			LogFilter.log.error("Failed at createNewProduct with "
+			AuthFilter.log.error("Failed at createNewProduct with "
 					+ ex.toString());
 		}
 
@@ -152,7 +152,7 @@ public class WishDataJDBC implements WishDataDAO {
 
 			}
 			if (userId != wishUserId) {
-				LogFilter.log
+				AuthFilter.log
 						.error("Alert! userid try to delete someone else product");
 				return false;
 			}

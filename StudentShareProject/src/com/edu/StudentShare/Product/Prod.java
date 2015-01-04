@@ -17,13 +17,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 import com.edu.StudentShare.Utils;
 import com.edu.StudentShare.Redis.Products;
 import com.edu.StudentShare.User.User;
 import com.edu.StudentShare.User.UserData;
 import com.edu.StudentShare.User.UserDataJDBC;
-
 
 /**
  * Servlet implementation class UserRegister
@@ -54,21 +53,19 @@ public class Prod {
 		int product_id = 0;
 		try {
 			id = Utils.retiveUserId(req);
-			
-				java.sql.Date sqlDate = new java.sql.Date(
-						System.currentTimeMillis());
-				ProductData data = new ProductData(productName, price, id,
-						quntity, sqlDate, 0, description, "url");
-				product_id = productJdbc.createNewProduct(data);
 
-			
+			java.sql.Date sqlDate = new java.sql.Date(
+					System.currentTimeMillis());
+			ProductData data = new ProductData(productName, price, id, quntity,
+					sqlDate, 0, description, "url");
+			product_id = productJdbc.createNewProduct(data);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 			return Response.status(400).entity(e.toString()).build();
 
 		}
-		String returnString =  "Your id is: " +product_id ;
+		String returnString = "Your id is: " + product_id;
 
 		return Response.status(201).entity(returnString).build();
 
@@ -77,7 +74,6 @@ public class Prod {
 	@GET
 	@Path("/getSellers")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public String getSellers(@Context HttpServletRequest req) {
 		int id = 0;
 		List<String> list = null;
@@ -86,7 +82,7 @@ public class Prod {
 			list = productJdbc.getSellers();
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Utils.toJson(list);
@@ -94,49 +90,77 @@ public class Prod {
 
 	@POST
 	@Path("/delete")
-	public String deleteProduct(@FormParam("product_id") int productId,
+	public Response deleteProduct(@FormParam("product_id") int productId,
 			@Context HttpServletRequest req) {
 		int id = 0;
+		String returnString = null;
 		try {
 			id = Utils.retiveUserId(req);
-			if (id != 0) {
-				productJdbc.deleteProduct(id, productId);
+			Boolean result = productJdbc.deleteProduct(id, productId);
+			returnString = DeleteProductView(productId, id, result);
 
-			} else {
-				return "Not connected";
-			}
+
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
-		}
+			AuthFilter.log.error("Failed at user" + e);
+			return Response.status(400).entity(e).build();
 
-		return "Deleted";
+		}
+		return Response.status(201).entity(returnString).build();
+
 	}
 
 	@POST
 	@Path("/buy")
-	public String buyProduct(@FormParam("product_id") int productId,
+	public Response buyProduct(@FormParam("product_id") int productId,
 			@Context HttpServletRequest req) {
 		int id = 0;
+		String returnString = null;
+
 		try {
 			id = Utils.retiveUserId(req);
-			if (id != 0) {
-				productJdbc.buyProduct(id, productId);
-				User.userJdbc.UpdateUserRank(id, 0.1); 
-				
-			} else {
-				return "Not connected";
-			}
+
+			productJdbc.buyProduct(id, productId);
+			returnString = BuyProductView(productId, id);
+
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
+			return Response.status(400).entity(e).build();
+
 		}
 
-		return "Successfully purchased ";
+		return Response.status(201).entity(returnString).build();
+	}
+
+	private String DeleteProductView(int productId, int id, Boolean result) {
+		String returnString = null;
+		if (!productJdbc.checkIfProductExist(productId)) {
+			returnString = "This product doesn't exist!";
+
+		} else {
+			if(!result)
+				returnString = "You are not allowed to delete it!";
+			else{
+			returnString = "Success deleted: " + id;
+			}
+		}
+		
+		return returnString;
+	}
+
+	private String BuyProductView(int productId, int id) {
+		String returnString = null;
+		if (!productJdbc.checkIfProductExist(productId)) {
+			returnString = "product doesnt exist!";
+		} else {
+			returnString = "Success purchased: " + id;
+		}
+
+		return returnString;
 	}
 
 	@GET
 	@Path("/getTop")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public String getTop(@QueryParam("max") int max,
 			@Context HttpServletRequest req) {
 		int id = 0;
@@ -146,7 +170,7 @@ public class Prod {
 			list = Products.getTopProducts(max);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Utils.toJson(list);
@@ -171,7 +195,7 @@ public class Prod {
 
 			}
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Utils.toJson(listdata);
@@ -181,7 +205,6 @@ public class Prod {
 	@POST
 	@Path("/show")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public String showProduct(@FormParam("product_id") int productId,
 			@Context HttpServletRequest req) {
 		{
@@ -192,7 +215,7 @@ public class Prod {
 			data = productJdbc.getProductInfo(productId);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Utils.toJson(data);
@@ -201,7 +224,6 @@ public class Prod {
 	@GET
 	@Path("/myProducts")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public String myProducts(@Context HttpServletRequest req) {
 
 		List<ProductData> data = null;
@@ -211,7 +233,7 @@ public class Prod {
 			data = productJdbc.getProductsByUser(id);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Utils.toJson(data);

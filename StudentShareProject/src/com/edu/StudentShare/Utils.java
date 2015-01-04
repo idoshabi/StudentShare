@@ -29,8 +29,8 @@ public class Utils {
 	}
 	// ConvertToJson
 	public static String toJson(Object obj) {
-		if (json == null) {
-			json = new Gson();
+		if (Utils.json == null) {
+			Utils.json = new Gson();
 		}
 		String jsonString = json.toJson(obj);
 		

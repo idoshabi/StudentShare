@@ -23,7 +23,7 @@ import java.util.*;
 import jersey.repackaged.org.objectweb.*;
 
 //Implements Filter class
-public class LogFilter implements Filter {
+public class AuthFilter implements Filter {
 	public static Utils log;
 
 	public void init(FilterConfig config) throws ServletException {
@@ -71,7 +71,8 @@ public class LogFilter implements Filter {
 		String page = bits[bits.length - 1];
 		if (page.equals("login.html") || page.equals("Register.html")
 				|| page.equals("Connect") || page.equals("Register")||
-				page.equals("StudentShareProject")) {
+				page.equals("StudentShareProject") ||
+				page.equals("StudentShare")){
 			return true;
 		}
 		return false;

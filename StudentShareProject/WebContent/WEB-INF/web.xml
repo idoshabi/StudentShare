@@ -3,7 +3,7 @@
   <display-name>StudentShareProject</display-name>
    <filter>
     <filter-name>LogFilter</filter-name>
-    <filter-class>com.edu.StudentShare.LogFilter</filter-class>
+    <filter-class>com.edu.StudentShare.AuthFilter</filter-class>
     <init-param>
       <param-name>log_path</param-name>
       <param-value>C:\\log\\web.log</param-value>

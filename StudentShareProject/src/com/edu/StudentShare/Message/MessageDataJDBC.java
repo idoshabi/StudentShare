@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.edu.StudentShare.DBConn;
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 
 public class MessageDataJDBC implements MessageDataDAO {
 	private String tablenName = null;
@@ -130,7 +130,7 @@ public class MessageDataJDBC implements MessageDataDAO {
 				id = Integer.parseInt(rs.getString("last_id"));
 			}
 		} catch (Exception ex) {
-			LogFilter.log.error("Failed at createNewProduct with "
+			AuthFilter.log.error("Failed at createNewProduct with "
 					+ ex.toString());
 		}
 
@@ -152,7 +152,7 @@ public class MessageDataJDBC implements MessageDataDAO {
 
 			}
 			if (userid != senderId) {
-				LogFilter.log
+				AuthFilter.log
 						.error("Alert! userid try to delete someone else product");
 				return false;
 			}

@@ -19,7 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 import com.edu.StudentShare.Utils;
 import com.edu.StudentShare.Product.ProductData;
 import com.edu.StudentShare.Redis.*;
@@ -54,8 +54,7 @@ public class User {
 			// Get init parameter
 			ConnectionPool pool = new ConnectionPool();
 
-
-			LogFilter.log.info("connect with user=" + user + ", password="
+			AuthFilter.log.info("connect with user=" + user + ", password="
 					+ password);
 
 			if (user != null && password != null) {
@@ -63,18 +62,31 @@ public class User {
 				saveSession(req, id);
 				OnlineUsers.addUser(id);
 			}
-		} 
-		catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+		} catch (Exception e) {
+			AuthFilter.log.error("Failed at user" + e);
 			return Response.status(400).entity(e.toString()).build();
 
 		}
-		String returnString =  "Your id is: " +id ;
-		
+
+		String returnString = LoginView(id);
+
 		return Response.status(201).entity(returnString).build();
 	}
 
-	public int saveSession(HttpServletRequest req, int id) {
+	private String LoginView(int id) {
+		String returnString = null;
+
+		if (id == 0) {
+			returnString = "Failed to connect! Password or Username is incrorrect!";
+		}
+		else
+		{
+			returnString = "Successfully connect! Your id is: " + id;
+		}
+		return returnString;
+	}
+
+	private int saveSession(HttpServletRequest req, int id) {
 
 		HttpSession session = req.getSession(true);
 		session.setAttribute("user_id", id);
@@ -89,11 +101,11 @@ public class User {
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
 		List<ProductData> data = null;
-		
-			data = ShopptingCart.getItemFromCart((int) userId);
 
-			return Utils.toJson(data);
-		
+		data = ShopptingCart.getItemFromCart((int) userId);
+
+		return Utils.toJson(data);
+
 	}
 
 	@GET
@@ -104,7 +116,7 @@ public class User {
 		Object userId = session.getAttribute("user_id");
 
 		userJdbc.deleteUser((int) userId);
-		
+
 		String returnString = "Your id is: " + userId;
 
 		return Response.status(201).entity(returnString).build();
@@ -118,28 +130,27 @@ public class User {
 
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
-		
-			ShopptingCart.deleteItemFromCart((int) userId, productId);
-			String returnString = "Your id is: " + (int) userId;
 
+		ShopptingCart.deleteItemFromCart((int) userId, productId);
+		String returnString = "Your id is: " + (int) userId;
 
-			return Response.status(201).entity(returnString).build();
+		return Response.status(201).entity(returnString).build();
 	}
+
 	@GET
 	@Path("/getOnlineUsers")
 	public String getOnlineUsers(@Context HttpServletRequest req,
-			@QueryParam("intervalTime")int  intervalTime,
+			@QueryParam("intervalTime") int intervalTime,
 			@QueryParam("maxResults") int maxResults) {
 		List<UserData> list = null;
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
-		
-			list = OnlineUsers.getOnlineUserByTime(maxResults, intervalTime);
-			
-		
+
+		list = OnlineUsers.getOnlineUserByTime(maxResults, intervalTime);
 
 		return Utils.toJson(list);
 	}
+
 	@GET
 	@Path("/deleteCart")
 	public Response deleteCart(@Context HttpServletRequest req) {
@@ -160,18 +171,15 @@ public class User {
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
 
-			data = ShopptingCart.CheckoutPurchase((int) userId);
+		data = ShopptingCart.CheckoutPurchase((int) userId);
 
-		
 		return Utils.toJson(data);
 
 	}
-	
-	
+
 	@GET
 	@Path("/getTop")
 	@Produces(MediaType.APPLICATION_JSON)
-
 	public String getTop(@QueryParam("max") int max,
 			@Context HttpServletRequest req) {
 		int id = 0;
@@ -181,12 +189,12 @@ public class User {
 			list = Users.getTopUsers(max);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Utils.toJson(list);
 	}
-	
+
 	@GET
 	@Path("/show")
 	public String showUser(@Context HttpServletRequest req) {
@@ -194,13 +202,12 @@ public class User {
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
 
-		
-			data = userJdbc.showUserInfo((int) userId);
+		data = userJdbc.showUserInfo((int) userId);
 
 		return Utils.toJson(data);
 
-
 	}
+
 	@POST
 	@Path("/addToCart")
 	@Produces(MediaType.TEXT_HTML)
@@ -212,9 +219,8 @@ public class User {
 		try {
 			HttpSession session = req.getSession(true);
 			Object userId = session.getAttribute("user_id");
-			ShopptingCart.addItemToCart((int) userId, product_id);
-
-			returnString = "Your id is: " + (int) userId;
+			int pid = ShopptingCart.addItemToCart((int) userId, product_id);
+			returnString = AddCartView(userId, pid);
 
 		} catch (Exception e) {
 			return Response.status(400).entity("Failed at user" + e).build();
@@ -223,6 +229,19 @@ public class User {
 
 		return Response.status(201).entity(returnString).build();
 
+	}
+
+	private String AddCartView(Object userId, int pid) {
+		String returnString;
+		if (pid != 0)
+		{
+			returnString = "Your id is: " + (int) userId;
+		}
+		else
+		{
+			returnString = "This product doesn't exist!";
+		}
+		return returnString;
 	}
 
 	@POST
@@ -235,22 +254,22 @@ public class User {
 
 			HttpSession session = req.getSession(true);
 			Object userId = session.getAttribute("user_id");
-				Users.increaseUserRank(userToIncrement, points);
-			
+			Users.increaseUserRank(userToIncrement, points);
+
 		} catch (Exception e) {
-			return Response.status(400).entity("Failed at user" +e).build();
+			return Response.status(400).entity("Failed at user" + e).build();
 		}
 		String returnString = "Your id is: " + (int) userToIncrement;
 
 		return Response.status(201).entity(returnString).build();
-
 
 	}
 
 	@POST
 	@Path("/ChangePassword")
 	@Produces(MediaType.TEXT_HTML)
-	public Response ChangePassword(@FormParam("oldDassword") String oldDassword,
+	public Response ChangePassword(
+			@FormParam("oldDassword") String oldDassword,
 			@FormParam("newPassword") String newPassword,
 			@FormParam("confirmPassword") String confirmPassword,
 			@Context HttpServletRequest req) {
@@ -259,27 +278,27 @@ public class User {
 
 			HttpSession session = req.getSession(true);
 			Object userId = session.getAttribute("user_id");
-			 returnString = "Your id is: " + (int) userId;
+			returnString = "Your id is: " + (int) userId;
 
-				if (!confirmPassword.equals(newPassword)){
-					String DiffrentPwd = "password is diffrent";
+			if (!confirmPassword.equals(newPassword)) {
+				String DiffrentPwd = "password is diffrent";
 				return Response.status(401).entity(DiffrentPwd).build();
-				}
-				
+			}
+
 			int id = (int) userId;
 			Boolean status = userJdbc.changePassword(id, oldDassword,
 					newPassword);
-			LogFilter.log.info("connect with user=" + id + ", password="
+			AuthFilter.log.info("connect with user=" + id + ", password="
 					+ newPassword);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Response.status(201).entity(returnString).build();
 
 	}
-	  
+
 	@POST
 	@Path("/Register")
 	@Produces(MediaType.TEXT_HTML)
@@ -287,7 +306,7 @@ public class User {
 			@FormParam("first_Name") String first_Name,
 			@FormParam("last_name") String last_Name,
 			@FormParam("email") String email,
-			@FormParam("birthday") DateAdapter  birthday1,
+			@FormParam("birthday") DateAdapter birthday1,
 			@FormParam("password") String password,
 			@FormParam("confirm_pwd") String confirm_pwd,
 			@FormParam("image_url") String image_url,
@@ -296,48 +315,49 @@ public class User {
 		int id = 0;
 		try {
 			Date birthday = birthday1.getDate();
-			 java.sql.Date date = Utils.TosqlDate(birthday);
-			 int initPoints = 100;
-			 int initRank = 0;
+			java.sql.Date date = Utils.TosqlDate(birthday);
+			int initPoints = 100;
+			int initRank = 0;
 			// BookDataJDBCTemplate.u.info("New user="+user+", password="+password);
 			if (user != null && password != null) {
-				if (!password.equals(confirm_pwd))
-				{
+				if (!password.equals(confirm_pwd)) {
 					String DiffrentPwd = "password is diffrent!";
-				return Response.status(401).entity(DiffrentPwd).build();
+					return Response.status(401).entity(DiffrentPwd).build();
 				}
-				UserData userData = new UserData(user, password, email,
-						date, first_Name, last_Name, initRank, initPoints, image_url);
-				
+				UserData userData = new UserData(user, password, email, date,
+						first_Name, last_Name, initRank, initPoints, image_url);
+
 				id = userJdbc.createNewUser(userData);
 				// Save the user_id to the session
 				saveSession(req, id);
-				
+
 				Users.setUser(id, userData);
 
 			}
-			String returnString =  "Your id is:" + id ;
+			String returnString = "Your id is:" + id;
 			return Response.status(201).entity(returnString).build();
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 		return null;
 
 	}
-	public static class DateAdapter{
-        private Date date;
-        public DateAdapter(String date){
-            try {
-                this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-            } catch (Exception e) {
-            		System.out.println(e);
-            }
-        }
 
-        public Date getDate(){
-            return this.date;
-        }
-    }
+	public static class DateAdapter {
+		private Date date;
+
+		public DateAdapter(String date) {
+			try {
+				this.date = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+
+		public Date getDate() {
+			return this.date;
+		}
+	}
 
 }

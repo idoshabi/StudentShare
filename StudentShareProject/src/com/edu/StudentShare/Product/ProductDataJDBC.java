@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.ListIterator;
 
 import com.edu.StudentShare.DBConn;
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 import com.edu.StudentShare.Redis.Products;
 import com.edu.StudentShare.Transaction.Transac;
 import com.edu.StudentShare.Transaction.TransactionData;
 import com.edu.StudentShare.User.User;
+import com.edu.StudentShare.WishList.WishData;
 
 public class ProductDataJDBC implements ProductDataDAO {
 
@@ -47,7 +48,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 			}
 
 		} catch (Exception ex) {
-			LogFilter.log
+			AuthFilter.log
 					.error("Failed at searchProduct with " + ex.toString());
 			return null;
 		}
@@ -82,7 +83,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 			}
 
 		} catch (Exception ex) {
-			LogFilter.log.error("Failed at createNewProduct with "
+			AuthFilter.log.error("Failed at createNewProduct with "
 					+ ex.toString());
 		}
 
@@ -105,7 +106,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 
 			}
 			if (userid != sellerId) {
-				LogFilter.log
+				AuthFilter.log
 						.error("Alert! userid try to delete someone else product");
 				return false;
 			}
@@ -149,6 +150,27 @@ public class ProductDataJDBC implements ProductDataDAO {
 		}
 		return false;
 
+	}
+	
+	public Boolean checkIfProductExist(int productId)
+	{
+		try {
+			String Sql= "Select id from " +tablenName + " where id = "+ productId;
+			Statement stmnt = conn.createStatement();
+			ResultSet rSet = stmnt.executeQuery(Sql);
+			int id = 0;
+			while(rSet.next())
+			{
+				id = rSet.getInt("id");
+			}
+			
+			if (id != 0)
+				return true;
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return false;
 	}
 
 	@Override
@@ -229,7 +251,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 
 	private ProductData getProductFromResultSet(ResultSet rSet) {
 		ProductData data = null;
-
+		
 		try {
 			while (rSet.next()) {
 				String productName = rSet.getString("productName");
@@ -243,6 +265,34 @@ public class ProductDataJDBC implements ProductDataDAO {
 
 				data = new ProductData(productName, price, sellerId, quantity,
 						date, soldCount, description, image_url);
+			}
+			return data;
+
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+
+		}
+		return data;
+
+	}
+	private List<ProductData> getProductsFromResultSet(ResultSet rSet) {
+		 List<ProductData>  data = new ArrayList<ProductData>();
+		
+		try {
+			
+			while (rSet.next()) {
+				String productName = rSet.getString("productName");
+				double price = rSet.getDouble("price");
+				int soldCount = rSet.getInt("soldCount");
+				String image_url = rSet.getString("image_url");
+				Date date = rSet.getDate("dateTime");
+				int sellerId = rSet.getInt("sellerId");
+				String description = rSet.getString("description");
+				int quantity = rSet.getInt("quantity");
+
+				data.add(new ProductData(productName, price, sellerId, quantity,
+						date, soldCount, description, image_url));
+			
 			}
 			return data;
 
@@ -267,7 +317,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 			stmnt.setInt(1, user_id);
 			ResultSet rSet = stmnt.executeQuery();
 
-			dataList.add(getProductFromResultSet(rSet));
+			dataList  = getProductsFromResultSet(rSet);
 
 			return dataList;
 		} catch (SQLException e) {
@@ -276,7 +326,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 		}
 		return dataList;
 	}
-
+	
 	public List<String> getSellers(){
 		String SQL = "SELECT distinct users.username FROM users INNER JOIN product ON users.id=product.sellerId";
 		

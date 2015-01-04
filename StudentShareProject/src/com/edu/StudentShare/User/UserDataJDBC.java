@@ -11,7 +11,7 @@ import java.util.List;
 import java.sql.Statement;
 
 import com.edu.StudentShare.DBConn;
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 import com.edu.StudentShare.Message.MessageData;
 
 public class UserDataJDBC implements UserDataDAO {
@@ -101,7 +101,7 @@ public class UserDataJDBC implements UserDataDAO {
 			return true;
 
 		} catch (Exception ex) {
-			LogFilter.log.error("Failed at UpdateUserPoints with "
+			AuthFilter.log.error("Failed at UpdateUserPoints with "
 					+ ex.toString());
 
 			return false;
@@ -123,7 +123,7 @@ public class UserDataJDBC implements UserDataDAO {
 			return true;
 
 		} catch (Exception ex) {
-			LogFilter.log.error("Failed at UpdateUserRank with "
+			AuthFilter.log.error("Failed at UpdateUserRank with "
 					+ ex.toString());
 
 			return false;

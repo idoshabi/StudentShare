@@ -3,7 +3,7 @@ package com.edu.StudentShare.User;
 import java.io.IOException;
 import java.net.URL;
 
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserConnect extends HttpServlet {
 	@Override
 	public void destroy() {
-		LogFilter.log.dispose();
+		AuthFilter.log.dispose();
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -60,7 +60,7 @@ public class UserConnect extends HttpServlet {
 					String confirmPassword = request.getParameter("username");
 					if (newPassword == confirmPassword)
 					{
-					LogFilter.log.info("changed password="+oldPassword+", password="+newPassword);
+					AuthFilter.log.info("changed password="+oldPassword+", password="+newPassword);
 					if (oldPassword !=null && newPassword !=null && confirmPassword !=null)
 						userJdbc.changePassword(2, oldPassword, newPassword);
 					}
@@ -68,13 +68,13 @@ public class UserConnect extends HttpServlet {
 				case "UserConnect":
 					String user = request.getParameter("username");
 					String pwd= request.getParameter("password");
-					LogFilter.log.info("connect with user="+user+", password="+pwd);
+					AuthFilter.log.info("connect with user="+user+", password="+pwd);
 					if (user !=null && pwd !=null)
 						userJdbc.connect(user, pwd);
 					
 			}
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e );
+			AuthFilter.log.error("Failed at user" + e );
 		}
 	
 				

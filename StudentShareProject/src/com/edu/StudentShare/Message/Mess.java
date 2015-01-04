@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.edu.StudentShare.DBHelper;
-import com.edu.StudentShare.LogFilter;
+import com.edu.StudentShare.AuthFilter;
 import com.edu.StudentShare.Utils;
 
 /**
@@ -59,7 +59,7 @@ public class Mess {
 			
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 			return Response.status(400).entity(e.toString()).build();
 
 		}
@@ -81,7 +81,7 @@ public class Mess {
 			list = messageJdbc.getSentMessagesByUser(id);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 		
 		return Utils.toJson(list);
@@ -98,7 +98,7 @@ public class Mess {
 			list = messageJdbc.getRecivedMessagesByUser(id);
 
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 		}
 
 		return Utils.toJson(list);
@@ -117,7 +117,7 @@ public class Mess {
 
 			
 		} catch (Exception e) {
-			LogFilter.log.error("Failed at user" + e);
+			AuthFilter.log.error("Failed at user" + e);
 			return Response.status(400).entity(e.toString()).build();
 
 		}
