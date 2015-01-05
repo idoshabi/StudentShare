@@ -57,7 +57,7 @@ public class AuthFilter implements Filter {
 
 		// Get the IP address of client machine.
 		String ipAddress = request.getRemoteAddr();
-		// VisitorsCounter.NewVisit(ipAddress);
+		//VisitorsCounter.NewVisit(ipAddress);
 		// Log the IP address and current timestamp.
 		System.out.println("IP " + ipAddress + ", Time "
 				+ new Date().toString());

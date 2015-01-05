@@ -40,16 +40,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/idos/Downloads/jedis-jedis-2.6.1/jedis-jedis-2.6.1/gradle/wrapper/gradle-wrapper.jar"/>
-	<classpathentry kind="lib" path="C:/edu/פיתוח יישומי אינטרנט/project/StudentShareProject/target/RESTfulExample/WEB-INF/lib/jedis-2.6.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/idos/Downloads/commons-pool2-2.3-bin/commons-pool2-2.3/commons-pool2-2.3.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/idos/Downloads/commons-pool2-2.3-bin/commons-pool2-2.3/commons-pool2-2.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/edu/פיתוח יישומי אינטרנט/project/StudentShareProject/WebContent/WEB-INF/lib/jedis-2.6.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

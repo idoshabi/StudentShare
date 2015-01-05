@@ -50,7 +50,7 @@ public class TransactionDataJDBC implements TransactionDataDAO {
 			if (buyerPointUser < transactionPoints) {
 				System.out
 						.println("Failed at makeTransaction,  user dont have enght points");
-				return 0;
+				return -1;
 			}
 			
 			

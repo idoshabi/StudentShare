@@ -63,7 +63,7 @@ public class Mess {
 			return Response.status(400).entity(e.toString()).build();
 
 		}
-		String returnString =  "Your id is: " +messeage_id ;
+		String returnString =  "Successfully sent messeage with id:" +messeage_id ;
 
 		return Response.status(201).entity(returnString).build();
 
@@ -121,7 +121,7 @@ public class Mess {
 			return Response.status(400).entity(e.toString()).build();
 
 		}
-		String returnString =  "Your id is: " +messeageId ;
+		String returnString =  "Messeage deleted: " +messeageId ;
 
 		return Response.status(201).entity(returnString).build();
 

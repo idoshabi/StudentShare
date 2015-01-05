@@ -48,7 +48,9 @@ public class Prod {
 	public Response Addproduct(@FormParam("productName") String productName,
 			@FormParam("price") double price,
 			@FormParam("description") String description,
-			@FormParam("quntity") int quntity, @Context HttpServletRequest req) {
+			@FormParam("quntity") int quntity,
+			@FormParam("image_url") String image_url,
+			@Context HttpServletRequest req) {
 		int id = 0;
 		int product_id = 0;
 		try {
@@ -57,7 +59,8 @@ public class Prod {
 			java.sql.Date sqlDate = new java.sql.Date(
 					System.currentTimeMillis());
 			ProductData data = new ProductData(productName, price, id, quntity,
-					sqlDate, 0, description, "url");
+					sqlDate, 0, description, image_url);
+			
 			product_id = productJdbc.createNewProduct(data);
 
 		} catch (Exception e) {
@@ -65,7 +68,7 @@ public class Prod {
 			return Response.status(400).entity(e.toString()).build();
 
 		}
-		String returnString = "Your id is: " + product_id;
+		String returnString = "Your product added to the store with id: " + product_id;
 
 		return Response.status(201).entity(returnString).build();
 
@@ -95,10 +98,14 @@ public class Prod {
 		int id = 0;
 		String returnString = null;
 		try {
+			if (!productJdbc.checkIfProductExist(productId)) {
+				returnString = "The product doesn't exist!";
+			} 
+			else{
 			id = Utils.retiveUserId(req);
 			Boolean result = productJdbc.deleteProduct(id, productId);
-			returnString = DeleteProductView(productId, id, result);
-
+			return  DeleteProductView(productId, id, result);
+			}
 
 		} catch (Exception e) {
 			AuthFilter.log.error("Failed at user" + e);
@@ -118,9 +125,9 @@ public class Prod {
 
 		try {
 			id = Utils.retiveUserId(req);
-
-			productJdbc.buyProduct(id, productId);
-			returnString = BuyProductView(productId, id);
+			
+			int tId = productJdbc.buyProduct(id, productId);
+			returnString = BuyProductView(productId, id, tId);
 
 		} catch (Exception e) {
 			AuthFilter.log.error("Failed at user" + e);
@@ -131,29 +138,30 @@ public class Prod {
 		return Response.status(201).entity(returnString).build();
 	}
 
-	private String DeleteProductView(int productId, int id, Boolean result) {
+	private Response DeleteProductView(int productId, int id, Boolean result) {
 		String returnString = null;
-		if (!productJdbc.checkIfProductExist(productId)) {
-			returnString = "This product doesn't exist!";
 
+		if (!result) {
+			returnString = "You are not allowed to delete it!";
+			return Response.status(403).entity(returnString).build();
 		} else {
-			if(!result)
-				returnString = "You are not allowed to delete it!";
-			else{
-			returnString = "Success deleted: " + id;
-			}
+			returnString = "Success deleted: " + productId;
 		}
-		
-		return returnString;
+
+		return Response.status(201).entity(returnString).build();
 	}
 
-	private String BuyProductView(int productId, int id) {
+	private String BuyProductView(int productId, int id, int t) {
 		String returnString = null;
 		if (!productJdbc.checkIfProductExist(productId)) {
 			returnString = "product doesnt exist!";
 		} else {
-			returnString = "Success purchased: " + id;
+			returnString = "Success purchased: " + productId;
+			if(t == -1) {
+				returnString = "You dont have enough points";
+			}
 		}
+		
 
 		return returnString;
 	}

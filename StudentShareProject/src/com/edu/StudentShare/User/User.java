@@ -131,12 +131,24 @@ public class User {
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
 
-		ShopptingCart.deleteItemFromCart((int) userId, productId);
-		String returnString = "Your id is: " + (int) userId;
-
-		return Response.status(201).entity(returnString).build();
+		Boolean result = ShopptingCart.deleteItemFromCart((int) userId, productId);
+		
+		return deleteItemFromCartView(result, productId);
 	}
+	private Response deleteItemFromCartView(Boolean result, int productId)
+	{
+		String returnString = null;
 
+		if (result){
+			returnString = String.format("Deleted item id: %s from cart", productId);
+		return Response.status(201).entity(returnString).build();
+
+		}
+		 returnString = String.format("Product id: %s dosen't exist in the cart!", productId);
+
+		return Response.status(401).entity(returnString).build();
+	}
+	
 	@GET
 	@Path("/getOnlineUsers")
 	public String getOnlineUsers(@Context HttpServletRequest req,
@@ -159,7 +171,7 @@ public class User {
 		Object userId = session.getAttribute("user_id");
 		ShopptingCart.deleteCartForUser((int) userId);
 
-		String returnString = "Your id is: " + (int) userId;
+		String returnString = "Shopping Cart deleted for userId:" + (int) userId;
 
 		return Response.status(201).entity(returnString).build();
 	}
@@ -172,7 +184,11 @@ public class User {
 		Object userId = session.getAttribute("user_id");
 
 		data = ShopptingCart.CheckoutPurchase((int) userId);
-
+		if (data == null)
+		{
+			return "You dont have enough points";
+		}
+		
 		return Utils.toJson(data);
 
 	}
@@ -235,7 +251,7 @@ public class User {
 		String returnString;
 		if (pid != 0)
 		{
-			returnString = "Your id is: " + (int) userId;
+			returnString = "Item added to cart" ;
 		}
 		else
 		{

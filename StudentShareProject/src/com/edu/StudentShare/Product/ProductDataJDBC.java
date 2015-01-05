@@ -199,6 +199,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 				if (transactionId == 0) {
 					System.out.println("Failed at product_id: " + product_id);
 				}
+				
 				return transactionId;
 			}
 
@@ -223,7 +224,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 			st.executeUpdate("use my_db");
 			String SQL = "CREATE TABLE IF NOT EXISTS "
 					+ tablenName
-					+ "(id int NOT NULL AUTO_INCREMENT,`productName` VARCHAR(100) NOT NULL,`price` double NOT NULL,`sellerId` int NOT NULL,`quantity` int	,`soldCount`  int NOT NULL,`description`  VARCHAR(1000) NOT NULL DEFAULT 'empty',`image_url` VARCHAR(100) NOT NULL DEFAULT 'default image link',`dateTime` DATE NOT NULL,  primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
+					+ "(id int NOT NULL AUTO_INCREMENT,`productName` VARCHAR(100) NOT NULL,`price` double NOT NULL,`sellerId` int NOT NULL,`quantity` int	,`soldCount`  int NOT NULL,`description`  VARCHAR(1000) NOT NULL DEFAULT 'empty',`image_url` VARCHAR(10000) NOT NULL DEFAULT 'default image link',`dateTime` DATE NOT NULL,  primary key (id)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_bin;";
 			st.execute(SQL);
 		} catch (SQLException ex) {
 			System.err.println(ex.getMessage());
