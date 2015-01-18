@@ -42,6 +42,8 @@ public class UserDataJDBC implements UserDataDAO {
 			st = conn.createStatement();
 			st.execute(SQL);
 		} catch (SQLException ex) {
+			AuthFilter.log.error("Failed at createNewUser" + ex);
+
 			System.err.println(ex.getMessage());
 		}
 		System.out.println("Created the table=" + tableName);
@@ -80,6 +82,7 @@ public class UserDataJDBC implements UserDataDAO {
 			}
 			System.out.println("Created Record");
 		} catch (SQLException ex) {
+			AuthFilter.log.error("Failed at createNewUser" + ex);
 			System.err.println(ex.getMessage());
 			return 0;
 		}
@@ -123,6 +126,8 @@ public class UserDataJDBC implements UserDataDAO {
 			return true;
 
 		} catch (Exception ex) {
+			AuthFilter.log.error("Failed at UpdateUserRank" + ex);
+
 			AuthFilter.log.error("Failed at UpdateUserRank with "
 					+ ex.toString());
 
@@ -183,6 +188,8 @@ public class UserDataJDBC implements UserDataDAO {
 			}
 
 		} catch (Exception ex) {
+			AuthFilter.log.error("Failed at connectUser" + ex);
+
 			System.out.println(ex);
 			return 0;
 		}

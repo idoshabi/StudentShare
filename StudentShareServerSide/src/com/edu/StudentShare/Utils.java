@@ -51,22 +51,32 @@ public class Utils {
 	}
 	public Utils(String path) {
 		try {
-			if (path == null)
+			if (path == null){
 				System.out.println("Failed to open log file");
+			}
+			if ( logger !=null ){
+				return;
+			}
 			fh = new FileHandler(path, 10000, 100, true);
 			fh.setFormatter(new SimpleFormatter());
 			logger = Logger.getLogger(AdapterLog.class.getName());
 			logger.addHandler(fh);
 			logger.setLevel(Level.CONFIG);
 
-		} catch (SecurityException | IOException e) {
+		} catch (SecurityException  e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void write(String log) {
-		if (logger != null)
+		if (logger != null){
+			System.out.println(log);
+
 			logger.log(Level.ALL, log);
+		}
 	}
 
 	/**
@@ -77,23 +87,34 @@ public class Utils {
 	}
 
 	public void error(String log) {
-		if (logger != null)
+		if (logger != null){
+			System.out.println(log);
 			logger.log(Level.WARNING, log);
+		}
 	}
 
 	public void info(String log) {
-		if (logger != null)
+		if (logger != null){
+			System.out.println(log);
+
 			logger.log(Level.INFO, log);
+		}
 	}
 
 	public void fine(String log) {
-		if (logger != null)
+		if (logger != null){
+			System.out.println(log);
+
 			logger.log(Level.FINE, log);
+		}
 	}
 
 	public void severe(String log) {
-		if (logger != null)
+		if (logger != null){
+			System.out.println(log);
+
 			logger.log(Level.SEVERE, log);
+		}
 	}
 
 }

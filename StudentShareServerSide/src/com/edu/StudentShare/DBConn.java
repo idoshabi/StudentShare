@@ -23,42 +23,41 @@ public class DBConn{
 
 	  // private DataSource dataSource;
 	   //private JdbcTemplate jdbcTemplateObject;
-	   
-	static
+	public DBConn()
 	{
-	
-	try
-    {
-        System.out.println("Loading the driver...");
-        Class.forName("com.mysql.jdbc.Driver");
-        System.out.println("Loading successed  ---------------");
-        
-        String jsonEnvVars = java.lang.System.getenv("VCAP_SERVICES");
-        if(jsonEnvVars != null){
-			parseUrlFromEnvVarsAndConnect(jsonEnvVars); 
-		}
-		else{
-			//Runs locally - only for maintenance 
-			
-			String url = "jdbc:mysql://localhost";
-			System.out.println("Connected local host url="+url);
-			conn= DriverManager.getConnection(url, USER_NAME, PASSWORD);
-			
-			
-		}
+		try
+	    {
+	        System.out.println("Loading the driver...");
+	        Class.forName("com.mysql.jdbc.Driver");
+	        System.out.println("Loading successed  ---------------");
+	        
+	        String jsonEnvVars = java.lang.System.getenv("VCAP_SERVICES");
+	        if(jsonEnvVars != null){
+				parseUrlFromEnvVarsAndConnect(jsonEnvVars); 
+			}
+			else{
+				//Runs locally - only for maintenance 
+				
+				String url = "jdbc:mysql://localhost";
+				System.out.println("Connected local host url="+url);
+				conn= DriverManager.getConnection(url, USER_NAME, PASSWORD);
+				
+				
+			}
 
-        System.out.println((new StringBuilder("conn successed. conn=")).append(conn).toString());
-    }
-    catch(ClassNotFoundException ex)
-    {
-        System.err.println((new StringBuilder("error loading:")).append(ex.getMessage()).toString());
-    }
-    catch(SQLException ex)
-    {
-        System.err.println((new StringBuilder("error loading:")).append(ex.getMessage()).toString());
-    }
+	        System.out.println((new StringBuilder("conn successed. conn=")).append(conn).toString());
+	    }
+	    catch(ClassNotFoundException ex)
+	    {
+	        System.err.println((new StringBuilder("error loading:")).append(ex.getMessage()).toString());
+	    }
+	    catch(SQLException ex)
+	    {
+	        System.err.println((new StringBuilder("error loading:")).append(ex.getMessage()).toString());
+	    }
 
-}
+	}
+
     private static void parseUrlFromEnvVarsAndConnect(String jsonEnvVars) {
 		String url = "";
 		try {

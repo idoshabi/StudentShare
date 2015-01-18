@@ -18,6 +18,7 @@ import com.edu.StudentShare.Transaction.Transac;
 import com.edu.StudentShare.User.User;
 import com.edu.StudentShare.WishList.Wish;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import jersey.repackaged.org.objectweb.*;
@@ -31,14 +32,19 @@ public class AuthFilter implements Filter {
 		ConnectionPool pool = new ConnectionPool();
 
 		String logPath = config.getInitParameter("log_path");
-
 		log = new Utils(logPath);
+
+		StaticInit();
+
+	}
+
+	private void StaticInit() {
+		DBConn db = new DBConn();
 		User user = new User();
 		Prod pro = new Prod();
 		Mess mess = new Mess();
 		Transac transac = new Transac();
 		Wish wish = new Wish();
-
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response,
@@ -48,16 +54,23 @@ public class AuthFilter implements Filter {
 		StringBuffer requestURL = ((HttpServletRequest) request)
 				.getRequestURL();
 		String URL = requestURL.toString();
-
 		if (!IsAllowedUrl(URL) && id == 0) {
 			PrintWriter out = response.getWriter();
 			out.println("Not connected!, please login or register First..");
 			return;
 		}
+		try {
+			if (DBConn.conn.isClosed() || !DBConn.conn.isValid(0)) {
+				StaticInit();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}// FixIt
 
 		// Get the IP address of client machine.
 		String ipAddress = request.getRemoteAddr();
-		//VisitorsCounter.NewVisit(ipAddress);
+		// VisitorsCounter.NewVisit(ipAddress);
 		// Log the IP address and current timestamp.
 		System.out.println("IP " + ipAddress + ", Time "
 				+ new Date().toString());
@@ -70,9 +83,9 @@ public class AuthFilter implements Filter {
 		String[] bits = url.split("/");
 		String page = bits[bits.length - 1];
 		if (page.equals("login.html") || page.equals("Register.html")
-				|| page.equals("Connect") || page.equals("Register")||
-				page.equals("StudentShareProject") ||
-				page.equals("StudentShare")){
+				|| page.equals("Connect") || page.equals("Register")
+				|| page.equals("StudentShareProject")
+				|| page.equals("StudentShare")) {
 			return true;
 		}
 		return false;

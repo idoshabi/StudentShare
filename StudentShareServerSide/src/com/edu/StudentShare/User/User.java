@@ -54,13 +54,14 @@ public class User {
 			// Get init parameter
 			ConnectionPool pool = new ConnectionPool();
 
-			AuthFilter.log.info("connect with user=" + user + ", password="
-					+ password);
+			
 
 			if (user != null && password != null) {
 				id = userJdbc.connect(user, password);
 				saveSession(req, id);
 				OnlineUsers.addUser(id);
+				AuthFilter.log.info("connect with user=" + user + ", password="
+						+ password);
 			}
 		} catch (Exception e) {
 			AuthFilter.log.error("Failed at user" + e);
@@ -351,6 +352,7 @@ public class User {
 
 			}
 			String returnString = "Your id is:" + id;
+			AuthFilter.log.info("User id: " + id +" just registered");
 			return Response.status(201).entity(returnString).build();
 
 		} catch (Exception e) {
