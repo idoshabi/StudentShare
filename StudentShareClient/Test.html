@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Mobile Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <link rel="stylesheet" href="jquery-ui.css" />
+    <script src="jquery-ui.js"></script>
+<script>
+
+    $(document).ready(function() {
+
+        $("#submit").click(function () {
+            if(!$("#username").val())
+            alert("enter user name !!   ");
+        })
+        $("#name").click(function () {
+            alert("Call gLogain Action");
+        })
+        $( "#frmLogin" ).validate({
+            submitHandler: function( form ) {
+                alert( "Call Login Action" );
+            }
+        });
+    } );
+
+</script>
+
+
+</head>
+<body>
+<!-------------- First page for form ----------->
+<div data-role="page">
+    <p>First Paragraph</p>
+
+    <!-------------- First page header ----------->
+    <div data-role="header">
+        <h1>StudentShare Registering</h1>
+    </div>
+    <!-------------- First page main content ----------->
+    <div data-role="main" class="ui-content">
+        <form method="post" action="#pageone" form id="frmLogin" data-ajax="false">
+            <div data-role="fieldcontain">
+
+            <label for="name">User Name : <span>*</span></label>
+            <input type="text" name="username" id="username" placeholder="User Name" class="required">
+            <label for="email">Email: <span>*</span></label>
+            <input type="email" id="email" name="email" placeholder="Email" class="required email"/>
+            <label for="name">Password : <span>*</span></label>
+            <input type="password" id="password" name="password" placeholder="Password"/>
+            <label for="name">Password Confirmation: <span>*</span></label>
+            <input type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="Password"/>
+            <label>Date:<span>*</span></label>
+                <input type="text" data-role="date">
+
+                <label>First Name:<span>*</span></label></label>
+            <input type="text" name="Firstname" id="Firstname" placeholder="First Name">
+            <label>Last Name:<span>*</span></label></label>
+            <input type="text" name="Lastname" id="Lastname" placeholder="Last Name">
+            </div>
+            <input id= "submit" type="submit" data-inline="true" value="Submit" data-theme="b">
+        </form>
+    </div>
+    <!-------------------------------------------------------------
+    End of First page
+    -------------------------------------------------------------->
+    <!-------------- Second page ----------->
+    <div data-role="page" id="pageone">
+        <!-------------- Second page header ----------->
+        <div data-role="header">
+            <h1>JQuery Mobile Form</h1>
+        </div>
+        <!-------------- Second page main content ----------->
+        <div data-role="main" class="ui-content">
+            <h2>Form Submitted Successfully...!!</h2>
+        </div>
+    </div>
+    <!-------------------------------------------------------------
+    End of Second page
+    -------------------------------------------------------------->
+    <div data-role="footer" data-position="fixed">
+        <h1> Registering</h1>
+    </div>
+</div>
+</body>
+</html>

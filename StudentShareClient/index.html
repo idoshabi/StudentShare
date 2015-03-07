@@ -1,65 +1,75 @@
 <!-- index.html -->
 <!DOCTYPE html>
-<html>
+<html ng-app="scotchApp">
 <head>
-	<!-- CSS ===================== -->
-	<!-- load bootstrap -->
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-	<link rel="stylesheet" href=style.css">
+    <!-- SCROLLS -->
+    <!-- load bootstrap and fontawesome via CDN -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="1.css">
 
-	<style>
-		body    { padding-top:30px; }
-		.ng-invalid.ng-dirty {
-			border-color:red;
-		}
-		.ng-valid.ng-dirty
-		{
-			border-color:green
-		}
-	</style>
-
-	<!-- JS ===================== -->
-	<!-- load angular -->
-	<script src="angular.min.js"></script>
-	<script src="app.js"></script>
+    <!-- SPELLS -->
+    <!-- load angular and angular route via CDN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    <script src="app.js"></script>
 </head>
+<body>
 
-<!-- apply angular app and controller to our body -->
-<body ng-app="validationApp" ng-controller="mainController">
-<div class="container">
-	<div class="col-sm-8 col-sm-offset-2">
+<!-- HEADER AND NAVBAR -->
+<header>
+    <nav class="navbar navbar-default" style="color: deepskyblue">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" rel="home" href="#" title="StudentShare by ido shabi">
+                    <img style="max-width:100px; margin-top: -15px;"
+                         src="logo.png">
+                    StudentShare
+                </a>
+            </div>
 
-		<!-- PAGE HEADER -->
-		<div class="page-header"><h1>AngularJS Form Validation</h1></div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                <li><a href="#Login"><i class="glyphicon glyphicon-home"></i> Login</a></li>
+                <li><a href="#MyAccount"><i class="glyphicon glyphicon-user "></i> My Account</a></li>
+                <li class="dropdown">
+                    <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-gift"></i> Products <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Buy</a></li>
+                        <li><a href="#">Recommended</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">New Product</a></li>
+                    </ul>
+                </li>
+                <li><a href="#MyWishes"><i class="glyphicon glyphicon-heart"></i> My Wishes</a></li>
+                <li class="dropdown">
+                    <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-comment"></i> Messages <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Received</a></li>
+                        <li><a href="#">Sent</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">New Message</a></li>
 
-		<!-- FORM -->
-		<!-- pass in the variable if our form is valid or invalid -->
-		<form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+                    </ul>
+                </li>
+             <li ng-show=""><a>Welcome</a></li>
 
-			<!-- NAME -->
-			<div class="form-group">
-				<label>Name</label>
-				<input type="text" name="name" class="form-control" ng-class="error: ng-invalid.ng-dirty" ng-model="name" required>
-			</div>
 
-			<!-- USERNAME -->
-			<div class="form-group">
-				<label>Username</label>
-				<input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="3" ng-maxlength="8">
-			</div>
+            </ul>
+        </div>
+    </nav>
+</header>
 
-			<!-- EMAIL -->
-			<div class="form-group">
-				<label>Email</label>
-				<input type="email" name="email" class="form-control" ng-model="email" required>
-			</div>
+<!-- MAIN CONTENT AND INJECTED VIEWS -->
+<div id="main">
+    <div ng-view></div>
 
-			<!-- SUBMIT BUTTON -->
-			<button type="submit" class="btn btn-primary">Submit</button>
+    <!-- angular templating -->
+    <!-- this is where content will be injected -->
 
-		</form>
+</div>
 
-	</div><!-- col-sm-8 -->
-</div><!-- /container -->
 </body>
 </html>

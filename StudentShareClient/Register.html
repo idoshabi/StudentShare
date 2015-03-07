@@ -1,89 +1,107 @@
+<!-- Register.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>jQuery Mobile Form</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-
-    <link rel="stylesheet" href="jquery-ui.css" />
-    <script src="jquery-ui.js"></script>
-<script>
-
-    $(document).ready(function() {
-
-        $("#submit").click(function () {
-            if(!$("#username").val())
-            alert("enter user name !!   ");
-        })
-        $("#name").click(function () {
-            alert("Call gLogain Action");
-        })
-        $( "#frmLogin" ).validate({
-            submitHandler: function( form ) {
-                alert( "Call Login Action" );
-            }
-        });
-    } );
-
-</script>
+	<!-- CSS ===================== -->
+	<!-- load bootstrap -->
+	<!-- 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">-->
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet"  type="text/css" href=1.css>
+	<link rel="stylesheet" href="bootstrap.css">
 
 
+
+	<!-- JS ===================== -->
+	<!-- load angular -->
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>-->
+	<script src="js/angular.min.js"></script>
+	<script src="js/jquery-1.11.0.min.js"></script>
+	<script src="app.js"></script>
 </head>
-<body>
-<!-------------- First page for form ----------->
-<div data-role="page">
-    <p>First Paragraph</p>
 
-    <!-------------- First page header ----------->
-    <div data-role="header">
-        <h1>StudentShare Registering</h1>
-    </div>
-    <!-------------- First page main content ----------->
-    <div data-role="main" class="ui-content">
-        <form method="post" action="#pageone" form id="frmLogin" data-ajax="false">
-            <div data-role="fieldcontain">
+<!-- apply angular app and controller to our body -->
+<body ng-app="validationApp" ng-controller="mainController">
+<div class="container">
+	<div class="col-sm-8 col-sm-offset-2">
 
-            <label for="name">User Name : <span>*</span></label>
-            <input type="text" name="username" id="username" placeholder="User Name" class="required">
-            <label for="email">Email: <span>*</span></label>
-            <input type="email" id="email" name="email" placeholder="Email" class="required email"/>
-            <label for="name">Password : <span>*</span></label>
-            <input type="password" id="password" name="password" placeholder="Password"/>
-            <label for="name">Password Confirmation: <span>*</span></label>
-            <input type="password" id="passwordConfirmation" name="passwordConfirmation" placeholder="Password"/>
-            <label>Date:<span>*</span></label>
-                <input type="text" data-role="date">
+		<!-- PAGE HEADER -->
+		<div class="page-header"><h1>StudentShare Registration Form </h1></div>
 
-                <label>First Name:<span>*</span></label></label>
-            <input type="text" name="Firstname" id="Firstname" placeholder="First Name">
-            <label>Last Name:<span>*</span></label></label>
-            <input type="text" name="Lastname" id="Lastname" placeholder="Last Name">
-            </div>
-            <input id= "submit" type="submit" data-inline="true" value="Submit" data-theme="b">
-        </form>
-    </div>
-    <!-------------------------------------------------------------
-    End of First page
-    -------------------------------------------------------------->
-    <!-------------- Second page ----------->
-    <div data-role="page" id="pageone">
-        <!-------------- Second page header ----------->
-        <div data-role="header">
-            <h1>JQuery Mobile Form</h1>
-        </div>
-        <!-------------- Second page main content ----------->
-        <div data-role="main" class="ui-content">
-            <h2>Form Submitted Successfully...!!</h2>
-        </div>
-    </div>
-    <!-------------------------------------------------------------
-    End of Second page
-    -------------------------------------------------------------->
-    <div data-role="footer" data-position="fixed">
-        <h1> Registering</h1>
-    </div>
-</div>
+		<!-- FORM -->
+		<!-- pass in the variable if our form is valid or invalid -->
+		<form name="userForm" ng-submit="submitForm(userForm.$valid )" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+			<!-- NAME -->
+			<div class="form-group">
+				<label>Username:</label>
+				<input type="text"  name="username" class="form-control" ng-model="user.username" ng-minlength="6" maxlength="24" required>
+			</div>
+			<span class="msg-error" ng-show="userForm.username.$error.minlength === true || userForm.username.$error.maxlength ===true">
+				Please enter a 6-24 length Username  </span>
+
+
+			<!-- EMAIL -->
+			<div class="form-group">
+				<label>Email</label>
+				<input type="email" name="email" class="form-control" ng-model="user.email" required>
+			</div>
+			<span class="msg-error" ng-show="userForm.email.$error.email === true">Please enter a valid email</span>
+
+			<div class="form-group">
+				<label>	First Name:</label>
+				<input type="text" name="first_Name" id="first_Name" class="form-control" ng-model="user.first_Name" required>
+			</div>
+			<div class="form-group">
+				<label>	Last Name:</label>
+				<input type="text" name="last_name" class="form-control" ng-model="user.last_name" required>
+			</div>
+			<!-- USERNAME -->
+			<div class="form-group">
+				<label>Password:</label>
+				<input type="password" id="password" name="password" class="form-control" ng-model="user.password" ng-minlength="6" ng-maxlength="24" required>
+			</div>
+
+
+			<span class="msg-error" ng-show="userForm.password.$error.minlength === true|| userForm.password.$error.maxlength ===true">Please enter a 6-24 length password  </span>
+
+			<!-- USERNAME -->
+			<div class="form-group">
+				<label>Password confirm:</label>
+				<input type="password" name="confirm_pwd" id="confirm_pwd" class="form-control" ng-model="user.confirm_pwd" ng-minlength="6" ng-maxlength="24" required  pw-check="password">
+			</div>
+				  <span class="msg-error" ng-show="userForm.confirm_pwd.$error.pwmatch">
+					Passwords don't match.
+				  </span>
+			<div class="form-group">
+				<label>Birth:</label>
+				<input type="datetime-local" name="birthday" class="form-control" ng-model="user.birthday" ng-minlength="6" ng-maxlength="24">
+			</div>
+
+			<div class="form-group">
+				<label>Image:</label>
+				<input type="text-local" name="image_url" class="form-control" ng-model="user.image_url" ng-chche>
+				<img src={{user.image_url}} style="width: 50px; height: 50px">
+			</div>
+
+			<div class="input-group">
+				<input type="text" class="form-control" datepicker-popup="{{format}}"
+					   name="dt" ng-model="formData.dt" is-open="datepickers.dt"
+					   datepicker-options="dateOptions" ng-required="true"
+					   close-text="Close" />
+     			 <span class="input-group-btn">
+				<button class="btn btn-default" ng-click="open($event,'dt')">
+					<i class="glyphicon glyphicon-calendar"></i></button>
+			  </span>
+					</div>
+
+
+					<!-- SUBMIT BUTTON -->
+			<br>
+					<button type="submit" ng-click="userForm.$valid" class="btn btn-primary">Submit</button>
+
+		</form>
+
+	</div><!-- col-sm-8 -->
+</div><!-- /container -->
 </body>
 </html>
