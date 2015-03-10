@@ -2,82 +2,88 @@
 // create angular app
 
 
-var validationApp = angular.module('validationApp',[] ,function($routeProvider, $locationProvider){
-    $routeProvider
-        .when('/Book/Edit', {
-            template: '<div>Edit</div>'
-        })
-        .when('/Book/Delete', {
-            template: '<div>Delete</div>'
-        })
-        .when('/Book/Show', {
-            template: '<div>Show</div>'
-        })
-        .when('/Book/Add', {
-            template: '<div>Add</div>'
-        })
-        .when('/Book/Error', {
-            template: '<div>Error Path</div>'
-        })
-        .otherwise({redirectTo: '/Book/Error'});
-
-    $locationProvider.html5Mode(true);
-
-});
-
-validationApp.config(function ($httpProvider) {
-    $httpProvider.defaults.withCredentials = true;
-});
-validationApp.controller('MainCtrl', function($scope) {
-
-        $scope.test = "123";
-
-});
-
+var validationApp = angular.module('validationApp',[]);
 
 // configure our routes
 var scotchApp = angular.module('scotchApp', ['ngRoute']);
 
-// configure our routes
-scotchApp.config(function($routeProvider) {
-    $routeProvider
 
+// configure our routes
+scotchApp.config(function($routeProvider, $httpProvider) {
+    $httpProvider.defaults.withCredentials = true;
+
+    $routeProvider
         // route for the home page
         .when('/', {
             templateUrl : 'home.html',
-            controller  : 'mainController'
+            controller  : 'NavBarController'
         })
 
         // route for the about page
-        .when('/about', {
-            templateUrl : 'login.html',
+        .when('/Login', {
+            templateUrl : 'Login.html',
             controller  : 'loginController'
         })
-
+        .when('/Register', {
+            templateUrl : 'Register.html',
+            controller  : 'RegisterController'
+        })
         // route for the contact page
-        .when('/contact', {
-            templateUrl : 'contact.html',
-            controller  : 'contactController'
-        });
+        .when('/ReceivedMessages', {
+            templateUrl : 'ReceivedMessages.html',
+            controller  : 'MessagesCtrlReceived'
+        })
+    .when('/SentMessages', {
+        templateUrl : 'SentMessages.html',
+        controller  : 'MessagesCtrlSent'
+    });
 });
+scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window',
+    function EventListController($scope, $http, $rootScope, $window) {
 
-// create the controller and inject Angular's $scope
-scotchApp.controller('mainController', function($scope) {
+    // function to submit the form after all validation has occurred
+    $scope.submitForm = function(isValid) {
+        // check to make sure the form is completely valid
+        if (!isValid) {
+
+        } else {
+            $scope.data = "username=" + $scope.user.username +
+            "&password=" + $scope.user.password;
+
+            $http({
+                method: 'POST',
+                url: 'http://localhost:8080/StudentShareProject/rest/User/Connect',
+                data: $scope.data,  // pass in data as strings
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
+            })
+                .success(function (data, status, headers, config) {
+                    $rootScope.isLoggedIn = true;
+                    $rootScope.loggedUserName = $scope.user.username;
+
+                    $window.location.href = '#';
+
+
+                }).error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+
+                    alert(data);
+
+                    // or server returns response with an error status.
+                });
+
+        }
+
+    };
+
+}]);
+scotchApp.controller('NavBarController', function($scope, $rootScope) {
     // create a message to display in our view
-    $scope.message = 'Everyone come and see how good I look!';
-});
 
-scotchApp.controller('aboutController', function($scope) {
-    $scope.message = 'Look! I am an about page.';
-});
-
-scotchApp.controller('contactController', function($scope) {
-    $scope.message = 'Contact us! JK. This is just a demo.';
 });
 
 
 
-validationApp.directive('pwCheck', [function () {
+scotchApp.directive('pwCheck', [function () {
     return {
         require: 'ngModel',
         link: function (scope, elem, attrs, ctrl) {
@@ -96,9 +102,8 @@ validationApp.directive('pwCheck', [function () {
         }
     }
 }]);
-// create angular controller
-validationApp.controller('mainController', ['$scope', '$http', function EventListController($scope, $http) {
-
+    scotchApp.controller('RegisterController', ['$scope', '$http','$rootScope','$window',
+        function EventListController($scope, $http, $rootScope, $window) {
 
     // function to submit the form after all validation has occurred
     $scope.submitForm = function(isValid) {
@@ -123,7 +128,9 @@ validationApp.controller('mainController', ['$scope', '$http', function EventLis
             })
                 .success(function (data, status, headers, config) {
                     console.log(data);
-                    alert("good")
+                    $rootScope.isLoggedIn = true;
+                    $rootScope.loggedUserName = $scope.user.username;
+                    $window.location.href = '#';
 
                     return data;
                 })
@@ -139,57 +146,60 @@ validationApp.controller('mainController', ['$scope', '$http', function EventLis
     };
 
 }]);
+scotchApp.controller('MessagesCtrlReceived', ['$scope', '$http','$rootScope','$window',
+    function EventListController($scope, $http, $rootScope, $window) {
 
-validationApp.controller('MessagesCtrl', ['$scope', '$http', function EventListController($scope, $http) {
+        getReceivedMessagesById($http, $scope,'RecivedMesseages')
 
-    $scope.viewReceivedMessages = function() {
-        $http({
-            method: 'GET',
-            url: 'http://localhost:8080/StudentShareProject/rest/Message/RecivedMesseages',
-            headers : { 'Content-Type': 'application/x-www-form-urlencoded'}
-    })
-            .success(function (data, status, headers, config) {
-                $scope.totalData = data;
-                for (index=0; index < $scope.totalData.length; ++index){
-                    senderId = $scope.totalData[index].senderId;
+    }]);
 
-                    addNamesToObject( senderId, $http, index, $scope);
+scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','$window',
+
+    function EventListController($scope, $http, $rootScope, $window) {
+        getReceivedMessagesById($http, $scope,'SentMesseages')
+
+
+    }]);
+
+function getReceivedMessagesById( $http, scope, type) {
+    var array
+    eval("scope."+type+"={}")
+    eval("array = scope."+type);
+
+    $http({
+        method: 'GET',
+        url: 'http://localhost:8080/StudentShareProject/rest/Message/'+ type,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+
+    }).success(function (data) {
+            for (index=0; index < data.length; ++index) {
+                senderId = data[index].senderId;
+                array[index] = data[index];
+                reciverId = data[index].reciverId;
+
+                getUserById(senderId, $http,index, function(result, index){
+                if (result!= null){
+
+                    array[index].senderUserName=  result._userName;
                 }
-                $scope.TotalRecivedMesseages = $scope.totalData;
-            }).error(function (data, status, headers, config) {
-            });
-    };
-    $scope.viewSentMessages = function() {
-        $http({
-            method: 'GET',
-            url: 'http://localhost:8080/StudentShareProject/rest/Message/SentMesseages',
-            headers : { 'Content-Type': 'application/x-www-form-urlencoded'}
-        })
-            .success(function (data, status, headers, config) {
-                for (index=0; index < data.length; ++index){
-                    senderId = data[index].senderId;
+            }
+            );
+                getUserById(reciverId, $http,index, function(result, index){
+                    if (result!= null){
 
-                    addNamesToObject( senderId, $http, index, $scope);
-                }
-                $scope.TotalSentMesseages = data;
-            }).error(function (data, status, headers, config) {
-            });
-    };
-}]);
+                        array[index].reciverUserName=  result._userName;
+                    }
+                    }
+                );
+            }
 
-function addNamesToObject(senderId, http, counter, scope){
-
-    var myDataPromise = getUserById(senderId, http);
-    myDataPromise.then(function(result){
-        if (result!= null){
-            scope.TotalRecivedMesseages[counter].senderUserName=  result._userName;
         }
+    ).error(function (data) {
+        });
+};
 
-    });
-
-}
-function getUserById(id, http) {
-        requestParams = {userId:id};
+function getUserById(id, http,counter, callback) {
+    requestParams = {userId: id};
     return http({
         method: 'GET',
         url: 'http://localhost:8080/StudentShareProject/rest/User/getUserByID',
@@ -197,52 +207,9 @@ function getUserById(id, http) {
         headers : { 'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function(result)
     {
-    return result.data;
+        callback(result.data, counter);
 
     });
 
 }
 
-validationApp.controller('loginController', ['$scope', '$http', function EventListController($scope, $http) {
-$scope.isLoggedIn = false;
-    // function to submit the form after all validation has occurred
-    $scope.submitForm = function(isValid) {
-        // check to make sure the form is completely valid
-        if (!isValid) {
-        } else {
-            $scope.data = "username=" + $scope.user.username +
-            "&password=" + $scope.user.password;
-
-            $http({
-                method: 'POST',
-                url: 'http://localhost:8080/StudentShareProject/rest/User/Connect',
-                data: $scope.data,  // pass in data as strings
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
-            })
-                .success(function (data, status, headers, config) {
-                    console.log(data);
-
-                    $scope.isLoggedIn = true;
-                    $scope.loggedUserName = $scope.user.username;
-                    if (!data.success) {
-
-                        // if not successful, bind errors to error variables
-                        $scope.errorName = data.errors.name;
-                        $scope.errorSuperhero = data.errors.superheroAlias;
-                    } else {
-                        // if successful, bind success message to message
-                        $scope.message = data.message;
-                    }
-                }).error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-
-                alert(data);
-
-                    // or server returns response with an error status.
-                });
-
-        }
-
-    };
-
-}]);

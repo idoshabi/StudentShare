@@ -1,38 +1,51 @@
-<!-- index.html -->
+    <!-- index.html -->
 <!DOCTYPE html>
 <html ng-app="scotchApp">
 <head>
     <!-- SCROLLS -->
     <!-- load bootstrap and fontawesome via CDN -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="1.css">
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <!-- SPELLS -->
+`
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.11.2.min.map"></script>
+<script src="js/jquery-1.11.2.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-route.js"></script>
+ <!--
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="1.css">
-
-    <!-- SPELLS -->
-    <!-- load angular and angular route via CDN -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+        -->
     <script src="app.js"></script>
-</head>
-<body>
 
-<!-- HEADER AND NAVBAR -->
-<header>
+</head>
+    <body>
+
+    <!-- HEADER AND NAVBAR -->
+<header ng-controller="NavBarController">
     <nav class="navbar navbar-default" style="color: deepskyblue">
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" rel="home" href="#" title="StudentShare by ido shabi">
                     <img style="max-width:100px; margin-top: -15px;"
-                         src="logo.png">
+                         src="images/logo.png">
                     StudentShare
                 </a>
             </div>
 
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
-                <li><a href="#Login"><i class="glyphicon glyphicon-home"></i> Login</a></li>
+                <li ng-show="!isLoggedIn"><a href="#Register"><i class="glyphicon glyphicon-home"></i> Register</a></li>
                 <li><a href="#MyAccount"><i class="glyphicon glyphicon-user "></i> My Account</a></li>
                 <li class="dropdown">
                     <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-gift"></i> Products <span class="caret"></span></a>
@@ -47,15 +60,15 @@
                 <li class="dropdown">
                     <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-comment"></i> Messages <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Received</a></li>
-                        <li><a href="#">Sent</a></li>
+                        <li><a href="#ReceivedMessages">Received</a></li>
+                        <li><a href="#SentMessages">Sent</a></li>
                         <li class="divider"></li>
                         <li><a href="#">New Message</a></li>
 
                     </ul>
                 </li>
-             <li ng-show=""><a>Welcome</a></li>
-
+             <li ng-show="isLoggedIn"><a class="p.thick">Hello {{loggedUserName}}</a></li>
+             <li ng-show="!isLoggedIn"><a href="#Login">You are not connected, connect</a></li>
 
             </ul>
         </div>
