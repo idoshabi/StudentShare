@@ -18,7 +18,10 @@ scotchApp.config(function($routeProvider, $httpProvider) {
             templateUrl : 'home.html',
             controller  : 'NavBarController'
         })
-
+        .when('/newMessage', {
+            templateUrl : 'newMessage.html',
+            controller  : 'newMessageCtrl'
+        })
         // route for the about page
         .when('/Login', {
             templateUrl : 'Login.html',
@@ -60,7 +63,7 @@ scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window
                     $rootScope.isLoggedIn = true;
                     $rootScope.loggedUserName = $scope.user.username;
 
-                    $window.location.href = '#';
+                    $window.location.href = '#/';
 
 
                 }).error(function (data, status, headers, config) {
@@ -76,12 +79,106 @@ scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window
     };
 
 }]);
-scotchApp.controller('NavBarController', function($scope, $rootScope) {
-    // create a message to display in our view
 
-});
+function  getCurrentLoggedUser(http, callback){
+    http({
+        method  : 'GET',
+        url     : 'http://localhost:8080/StudentShareProject/rest/User/show',
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+    }).success(function(data){
+
+        callback (data);
+    }).error(function(data, status) {
+        // called asynchronously if an error occurs
+        if (status==403){
+            callback(data);
+        }
+        // or server returns response with an error status.
+    });
+}
+
+scotchApp.controller('NavBarController', ['$scope', '$http','$rootScope','$window', '$location',
+    function EventListController($scope, $http, $rootScope, $window, $location) {
+        onRouteChangeOff = $scope.$on('$locationChangeStart', function (event, newUrl) {
+                isUserConnected($http, function callback(data) {
+                    if (data) {
+                        $rootScope.isLoggedIn = true;
+                        getCurrentLoggedUser($http,function(user){
+                                $rootScope.loggedUserName = user._userName;
+                            }
+                        )
+                    }
+                    else {
+                        $rootScope.isLoggedIn = false;
+                        if (!isAllowedSite(newUrl)){
+                            $location.path('/Login');
+                        }
+
+                    }
+                })
 
 
+            }
+        );
+
+
+    }]);
+
+function isAllowedSite(url){
+    if (url.contains('/Register'))
+        return true;
+
+    if(url.contains('/Login'))
+        return true;
+
+    if (url.endsWith('index.html#'))
+        return true;
+
+    if (url.endsWith('index.html'))
+        return true;
+
+    if (url.endsWith('index.html#/'))
+        return true;
+    return false;
+}
+String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+scotchApp.directive('isUserExist', ['$http',function ($http) {
+    return {
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            elem.bind('keyup', function () {
+                getIdByUser(elem.val(), $http, function(data){
+                    v= true;
+                    if(data != 0){
+                        v= false;
+                    }
+                    ctrl.$setValidity('userExist', v);
+                });
+
+            });
+        }
+    }
+}]);
+scotchApp.directive('isUserNotExist', ['$http',function ($http) {
+    return {
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            elem.bind('keyup', function () {
+                getIdByUser(elem.val(), $http, function(data){
+                    v= false;
+                    if(data != 0){
+                      v= true;
+                    }
+                    ctrl.$setValidity('userExist', v);
+                });
+
+            });
+        }
+    }
+}]);
 
 scotchApp.directive('pwCheck', [function () {
     return {
@@ -130,7 +227,7 @@ scotchApp.directive('pwCheck', [function () {
                     console.log(data);
                     $rootScope.isLoggedIn = true;
                     $rootScope.loggedUserName = $scope.user.username;
-                    $window.location.href = '#';
+                    $window.location.href = '#/';
 
                     return data;
                 })
@@ -146,6 +243,69 @@ scotchApp.directive('pwCheck', [function () {
     };
 
 }]);
+
+function isUserConnected(http, callback){
+    http({
+        method  : 'GET',
+        url     : 'http://localhost:8080/StudentShareProject/rest/User/getIdByUsername',
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+    }).success(function(data){
+
+       callback (true);
+    }).error(function(data, status) {
+        // called asynchronously if an error occurs
+        if (status==403){
+            callback(false);
+        }
+        // or server returns response with an error status.
+    });
+
+}
+function getIdByUser(user, http, callback){
+    requestParams = {username: user};
+    http({
+        method  : 'GET',
+        url     : 'http://localhost:8080/StudentShareProject/rest/User/getIdByUsername',
+        params     : requestParams,  // pass in data as strings
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+    }).success(function(data){
+
+        callback(data);
+    }).error(function(data) {
+        // called asynchronously if an error occurs
+        alert(data)
+
+
+        // or server returns response with an error status.
+    });
+
+}
+scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$window',
+    function EventListController($scope, $http, $rootScope, $window) {
+
+        $scope.submitForm = function(isValid){
+            getIdByUser ($scope.message.username,$http, function(data){
+
+                    $scope.data = "title=" + $scope.message.title +
+                    "&contant=" + $scope.message.conant+"&recipientId="+data;
+
+                $http({
+                    method: 'POST',
+                    url: 'http://localhost:8080/StudentShareProject/rest/Message/send',
+                    data: $scope.data,  // pass in data as strings
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
+                })
+                    .success(function (data) {
+                       alert("SuccessFully sent!");
+                    }).error(function (data) {
+                        alert("bad"+data);
+                    });
+            });
+        }
+
+
+    }]);
+
 scotchApp.controller('MessagesCtrlReceived', ['$scope', '$http','$rootScope','$window',
     function EventListController($scope, $http, $rootScope, $window) {
 
@@ -162,7 +322,7 @@ scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','$windo
     }]);
 
 function getReceivedMessagesById( $http, scope, type) {
-    var array
+    var array;
     eval("scope."+type+"={}")
     eval("array = scope."+type);
 
@@ -182,6 +342,7 @@ function getReceivedMessagesById( $http, scope, type) {
 
                     array[index].senderUserName=  result._userName;
                 }
+
             }
             );
                 getUserById(reciverId, $http,index, function(result, index){
@@ -192,11 +353,21 @@ function getReceivedMessagesById( $http, scope, type) {
                     }
                 );
             }
-
+            scope.arrayLength = index;
         }
-    ).error(function (data) {
+    ).error(function (data, status) {
+            if (status==403){
+                alert("Please connect first!");
+            }
+
         });
 };
+
+
+function sentMessage(http, id, title, contant){
+
+
+}
 
 function getUserById(id, http,counter, callback) {
     requestParams = {userId: id};

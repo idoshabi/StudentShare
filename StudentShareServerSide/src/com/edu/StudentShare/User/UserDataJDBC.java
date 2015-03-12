@@ -135,12 +135,32 @@ public class UserDataJDBC implements UserDataDAO {
 		}
 
 	}
+	
+	public int getUserIdByUsername(String userName){
+		int id = 0;
+		try{
+		String sql = "Select id FROM " + tableName
+				+ " WHERE username ='" + userName+"'";
+		java.sql.PreparedStatement stmnt = conn
+				.prepareStatement(sql);
+		ResultSet result = stmnt.executeQuery(sql);
+		while (result.next()) {
+			id = result.getInt("id");
+		}
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+		return id;
+	}
 	public double getNumberOfPoints(int userId) {
 		double points = 0;
 
 		try {
 			String selectpointsFromBuyer = "Select points FROM " + tableName
-					+ " WHERE id =" + userId;
+					+ " WHERE id ='" + userId+"'";
 			java.sql.PreparedStatement stmnt = conn
 					.prepareStatement(selectpointsFromBuyer);
 			ResultSet result = stmnt.executeQuery(selectpointsFromBuyer);

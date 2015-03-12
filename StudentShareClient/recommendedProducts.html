@@ -1,0 +1,21 @@
+
+<html>
+<head>
+
+</head>
+
+<!-- apply angular app and controller to our body -->
+<body  ng-app="scotchApp" ng-controller="recommendedProductsCtrl">
+
+
+<!-- PAGE HEADER -->
+<div ng-repeat="x in products">
+    <div ><td>To:{{x.reciverUserName}}</td></div>
+    <div > <td>Title:  {{ x.title }}</td></div>
+    <div ><td>Message:{{ x.contant }}</td></div>
+    <br>
+</div>
+
+
+</body>
+</html>

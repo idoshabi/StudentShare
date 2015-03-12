@@ -8,12 +8,7 @@ import javax.servlet.http.*;
 
 import com.edu.StudentShare.Message.Mess;
 import com.edu.StudentShare.Product.Prod;
-import com.edu.StudentShare.Product.ProductData;
 import com.edu.StudentShare.Redis.ConnectionPool;
-import com.edu.StudentShare.Redis.OnlineUsers;
-import com.edu.StudentShare.Redis.Products;
-import com.edu.StudentShare.Redis.ShopptingCart;
-import com.edu.StudentShare.Redis.VisitorsCounter;
 import com.edu.StudentShare.Transaction.Transac;
 import com.edu.StudentShare.User.User;
 import com.edu.StudentShare.WishList.Wish;
@@ -21,7 +16,6 @@ import com.edu.StudentShare.WishList.Wish;
 import java.sql.SQLException;
 import java.util.*;
 
-import jersey.repackaged.org.objectweb.*;
 
 //Implements Filter class
 public class AuthFilter implements Filter {
@@ -47,16 +41,26 @@ public class AuthFilter implements Filter {
 		Wish wish = new Wish();
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response,
+	public void doFilter(ServletRequest request, ServletResponse resp,
 			FilterChain chain) throws java.io.IOException, ServletException {
+		HttpServletResponse response = (HttpServletResponse) resp;
+		response.setHeader("Access-Control-Allow-Origin", "http://localhost:63342");
+		
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+		response.setHeader("Access-Control-Max-Age", "3600");
 
+		
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+		
 		int id = Utils.retiveUserId((HttpServletRequest) request);
 		StringBuffer requestURL = ((HttpServletRequest) request)
 				.getRequestURL();
 		String URL = requestURL.toString();
 		if (!IsAllowedUrl(URL) && id == 0) {
 			PrintWriter out = response.getWriter();
-			out.println("Not connected!, please login or register First..");
+			response.sendError(response.SC_FORBIDDEN , "Not connected!, please login or register First..");
+			
 			return;
 		}
 		try {
@@ -77,8 +81,8 @@ public class AuthFilter implements Filter {
 
 		// Pass request back down the filter chain
 		chain.doFilter(request, response);
-	}
 
+	}
 	private Boolean IsAllowedUrl(String url) {
 		String[] bits = url.split("/");
 		String page = bits[bits.length - 1];

@@ -63,28 +63,31 @@ public class User {
 				AuthFilter.log.info("connect with user=" + user + ", password="
 						+ password);
 			}
+			else{
+			return Response.status(400).entity("Failed to connect! Password or Username is incrorrect!").build();
+			}
 		} catch (Exception e) {
 			AuthFilter.log.error("Failed at user" + e);
 			return Response.status(400).entity(e.toString()).build();
 
 		}
 
-		String returnString = LoginView(id);
 
-		return Response.status(201).entity(returnString).build();
+		return  LoginView(id);
 	}
 
-	private String LoginView(int id) {
+	private Response LoginView(int id) {
 		String returnString = null;
 
-		if (id == 0) {
-			returnString = "Failed to connect! Password or Username is incrorrect!";
+		if (id == 0) 
+		{
+			return Response.status(400).entity("Failed to connect! Password or Username is incrorrect!").build();
 		}
+		
 		else
 		{
-			returnString = "Successfully connect! Your id is: " + id;
+			return Response.status(201).entity( "Successfully connect! Your id is: " + id).build();
 		}
-		return returnString;
 	}
 
 	private int saveSession(HttpServletRequest req, int id) {
@@ -151,6 +154,16 @@ public class User {
 	}
 	
 	@GET
+	@Path("/getIdByUsername")
+	public int getUserIdByUserName(@Context HttpServletRequest req,
+			@QueryParam("username") String username
+			) {
+		int id = userJdbc.getUserIdByUsername(username);
+
+		return id;
+	}
+	
+	@GET
 	@Path("/getOnlineUsers")
 	public String getOnlineUsers(@Context HttpServletRequest req,
 			@QueryParam("intervalTime") int intervalTime,
@@ -163,7 +176,14 @@ public class User {
 
 		return Utils.toJson(list);
 	}
-
+	@GET
+	@Path("/getUserByID")
+	public String getUserByID(@Context HttpServletRequest req,
+			@QueryParam("userId") int userId)
+	{
+		UserData user = userJdbc.showUserInfo(userId);
+		return Utils.toJson(user);
+	}
 	@GET
 	@Path("/deleteCart")
 	public Response deleteCart(@Context HttpServletRequest req) {
@@ -319,11 +339,12 @@ public class User {
 	@POST
 	@Path("/Register")
 	@Produces(MediaType.TEXT_HTML)
+	
 	public Response UserRegister(@FormParam("username") String user,
 			@FormParam("first_Name") String first_Name,
 			@FormParam("last_name") String last_Name,
 			@FormParam("email") String email,
-			@FormParam("birthday") DateAdapter birthday1,
+			@FormParam("birthday") Date birthday1,
 			@FormParam("password") String password,
 			@FormParam("confirm_pwd") String confirm_pwd,
 			@FormParam("image_url") String image_url,
@@ -331,7 +352,7 @@ public class User {
 			@Context HttpServletRequest req) {
 		int id = 0;
 		try {
-			Date birthday = birthday1.getDate();
+			Date birthday = birthday1;
 			java.sql.Date date = Utils.TosqlDate(birthday);
 			int initPoints = 100;
 			int initRank = 0;

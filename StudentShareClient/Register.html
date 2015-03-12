@@ -17,8 +17,14 @@
 			<!-- NAME -->
 			<div class="form-group">
 				<label>Username:</label>
-				<input type="text"  name="username" class="form-control" ng-model="user.username" ng-minlength="6" maxlength="24" required>
+				<input type="text" is-user-exist name="username" class="form-control" ng-model="user.username" ng-minlength="6" maxlength="24" required>
 			</div>
+			 <span class="msg-error" ng-show="userForm.username.$error.userExist===true">
+					The Username is already exist!
+				  </span>
+ 		<span class="msg-sucess" ng-show="!(userForm.username.$error.userExist===true) && !(userForm.username.$error.minlength === true)&& userForm.username.$dirty === true ">
+					The Username is free to use!
+				  </span>
 			<span class="msg-error" ng-show="userForm.username.$error.minlength === true || userForm.username.$error.maxlength ===true">
 				Please enter a 6-24 length Username  </span>
 
