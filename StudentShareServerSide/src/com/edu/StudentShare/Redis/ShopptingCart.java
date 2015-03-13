@@ -59,7 +59,9 @@ public class ShopptingCart {
 
 			list = jedis.lrange(getUniqueSet(userId), 0, -1);
 			for (String item : list) {
-				prodList.add(Products.getProductById(Integer.valueOf(item)));
+				ProductData data = Products.getProductById(Integer.valueOf(item));
+				if (data != null)
+					prodList.add(data);
 
 			}
 		}

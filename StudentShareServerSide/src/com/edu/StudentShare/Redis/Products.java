@@ -31,6 +31,8 @@ public class Products {
 			jedis.hset(uniqueId, "Product_quntity", String.valueOf(data.get_quntity()));
 			
 			jedis.hset(uniqueId, "Profile_picture", data.getImageUrl());
+			jedis.hset(uniqueId, "id",  String.valueOf(productId));
+
 			jedis.set(getUniqueSet(productId), uniqueId);
 		}
 	}
@@ -96,8 +98,14 @@ public class Products {
 			String Profile_picture = jedis.hget(uniqueId, "Profile_picture");
 			String Product_price = jedis.hget(uniqueId, "Product_price");
 			String Product_quntity = jedis.hget(uniqueId, "Product_quntity");
-
 			data = new ProductData(); 
+
+			try{
+				int id = Integer.valueOf(jedis.hget(uniqueId, "id"));
+				data.setId(id);				
+			}
+			catch(Exception e){}
+
 			data.set_productName(Product_Name);
 			data.set_seller_id(Integer.valueOf(Product_seller));
 			data.setPrice(Double.valueOf(Product_price));
@@ -105,6 +113,7 @@ public class Products {
 			data.setDescription(Product_description);
 			data.set_quntity(Integer.valueOf(Product_quntity));
 
+			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

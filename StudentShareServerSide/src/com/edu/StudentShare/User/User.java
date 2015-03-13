@@ -245,10 +245,10 @@ public class User {
 
 	}
 
-	@POST
+	@GET
 	@Path("/addToCart")
 	@Produces(MediaType.TEXT_HTML)
-	public Response addToCart(@FormParam("product_id") int product_id,
+	public Response addToCart(@QueryParam("product_id") int product_id,
 
 	@Context HttpServletRequest req) {
 		String returnString = null;

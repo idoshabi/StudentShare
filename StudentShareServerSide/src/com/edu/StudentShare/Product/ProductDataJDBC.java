@@ -86,7 +86,7 @@ public class ProductDataJDBC implements ProductDataDAO {
 			AuthFilter.log.error("Failed at createNewProduct with "
 					+ ex.toString());
 		}
-
+		//Save Product on redis side
 		Products.setProduct(id, prod);
 
 		return id;
@@ -263,9 +263,10 @@ public class ProductDataJDBC implements ProductDataDAO {
 				int sellerId = rSet.getInt("sellerId");
 				String description = rSet.getString("description");
 				int quantity = rSet.getInt("quantity");
+				int id = rSet.getInt("id");
 
 				data = new ProductData(productName, price, sellerId, quantity,
-						date, soldCount, description, image_url);
+						date, soldCount, description, image_url, id);
 			}
 			return data;
 
@@ -290,9 +291,10 @@ public class ProductDataJDBC implements ProductDataDAO {
 				int sellerId = rSet.getInt("sellerId");
 				String description = rSet.getString("description");
 				int quantity = rSet.getInt("quantity");
+				int id = rSet.getInt("id");
 
 				data.add(new ProductData(productName, price, sellerId, quantity,
-						date, soldCount, description, image_url));
+						date, soldCount, description, image_url,id));
 			
 			}
 			return data;

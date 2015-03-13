@@ -11,7 +11,8 @@ public class ProductData {
 	private int _sold;
 	private String description;
 	private String imageUrl;
-
+	private int id;
+	
 	public ProductData(String productName, double price, int seller_id , int quntity, Date postTime, int sold, String description,
 			String image)
 	{
@@ -23,6 +24,19 @@ public class ProductData {
 	this._sold = sold;
 	this.description = description;
 	this.imageUrl = image;
+	}
+	public ProductData(String productName, double price, int seller_id , int quntity, Date postTime, int sold, String description,
+			String image, int id)
+	{
+	this._productName = productName;
+	this.price = price;
+	this._seller_id = seller_id;
+	this._quntity = quntity;
+	this.postTime = postTime;
+	this._sold = sold;
+	this.description = description;
+	this.imageUrl = image;
+	this.id = id;
 	}
 	public ProductData() {
 		// TODO Auto-generated constructor stub
@@ -75,13 +89,22 @@ public class ProductData {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+
 	@Override
 	public String toString() {
-		String output = "productName: " + _productName +" price: "+ price
-				+" seller_id: " + _seller_id +" quntity: " + _quntity+ " description: "+
-				description;
-				
-				
-		return output;
+		return "ProductData [_productName=" + _productName + ", price=" + price
+				+ ", _seller_id=" + _seller_id + ", _quntity=" + _quntity
+				+ ", postTime=" + postTime + ", _sold=" + _sold
+				+ ", description=" + description + ", imageUrl=" + imageUrl
+				+ ", id=" + getId() + "]";
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 }

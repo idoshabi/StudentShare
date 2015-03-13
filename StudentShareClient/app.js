@@ -39,6 +39,10 @@ scotchApp.config(function($routeProvider, $httpProvider) {
             templateUrl : 'recommendedProducts.html',
             controller  : 'recommendedProductsCtrl'
         })
+        .when('/shoppingCart', {
+            templateUrl : 'shoppingCart.html',
+            controller  : 'ShoppingCartCtrl'
+        })
         .when('/newProduct', {
             templateUrl : 'newProduct.html',
             controller  : 'newProductCtrl'
@@ -340,6 +344,24 @@ function deleteMessage(http, id, callback){
     });
 }
 
+function addToCart(http, id, callback){
+    requestParams = "product_id=" + id;
+    http({
+        method  : 'POST',
+        url     : 'http://localhost:8080/StudentShareProject/rest/User/addToCart',
+        data     : requestParams,  // pass in data as strings
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+    }).success(function(data){
+
+        callback(data);
+    }).error(function(data) {
+        // called asynchronously if an error occurs
+        callback(data);
+
+
+        // or server returns response with an error status.
+    });
+}
 scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','$window',
 
     function EventListController($scope, $http, $rootScope, $window) {
