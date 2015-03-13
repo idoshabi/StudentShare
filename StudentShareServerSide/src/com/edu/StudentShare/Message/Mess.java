@@ -113,8 +113,10 @@ public class Mess {
 		try {
 			id = DBHelper.retiveUserId(req);
 			
-				messageJdbc.deleteMesseage(id, messeageId);
+				if (!messageJdbc.deleteMesseage(id, messeageId)){
+					return Response.status(403).entity("You cant delete it!").build();
 
+				}
 			
 		} catch (Exception e) {
 			AuthFilter.log.error("Failed at user" + e);

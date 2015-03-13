@@ -30,8 +30,8 @@ input {
 }
 
 .userBold{
-    font-size:15px;
-    font-weight: bold;
+    font-size:17px;
+    color: #1155CC;
 }
 .msg-sucess {
     color:#009933;
@@ -42,6 +42,8 @@ p.thick {
 }
 
 body{ margin-top:50px;}
+
+
 .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
 .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
 .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}

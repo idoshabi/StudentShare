@@ -33,8 +33,10 @@ public class MessageDataJDBC implements MessageDataDAO {
 			int recipientId = rSet.getInt("recipientId");
 			int senderId = rSet.getInt("senderId");
 			Date date = rSet.getDate("dateTime");
+			int id = rSet.getInt("id");
 
-			data = new MessageData(title, contant, senderId, recipientId, date);
+			data = new MessageData(title, contant, senderId, recipientId, date, id);
+			
 			return data;
 
 		} catch (SQLException e) {
@@ -142,8 +144,10 @@ public class MessageDataJDBC implements MessageDataDAO {
 	public Boolean deleteMesseage(int userid, int messeageId) {
 		try {
 			int senderId = 0;
-
+			int recipientId =0;
 			String checkIfBelong = "SELECT senderId FROM " + tablenName
+					+ " WHERE id = " + messeageId;
+			String checkIfBelongSender = "SELECT recipientId FROM " + tablenName
 					+ " WHERE id = " + messeageId;
 			Statement stmnt = conn.createStatement();
 			ResultSet rSet = stmnt.executeQuery(checkIfBelong);
@@ -151,7 +155,13 @@ public class MessageDataJDBC implements MessageDataDAO {
 				senderId = rSet.getInt("senderId");
 
 			}
-			if (userid != senderId) {
+			 rSet = stmnt.executeQuery(checkIfBelongSender);
+			 while (rSet.next()) {
+				 recipientId = rSet.getInt("recipientId");
+
+				}
+			
+			if (userid != senderId && userid != recipientId) {
 				AuthFilter.log
 						.error("Alert! userid try to delete someone else product");
 				return false;

@@ -1,20 +1,35 @@
 
 <html>
 <head>
-
+    <script src="js/ionic.bundle.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/ionic.css">
 </head>
 
 <!-- apply angular app and controller to our body -->
 <body  ng-app="scotchApp" ng-controller="recommendedProductsCtrl">
+<ion-header-bar class="bar-positive">
+    <h1 class="title">Canadian Music</h1>
+</ion-header-bar>
 
+<ion-content>
 
-<!-- PAGE HEADER -->
-<div ng-repeat="x in products">
-    <div ><td>To:{{x.reciverUserName}}</td></div>
-    <div > <td>Title:  {{ x.title }}</td></div>
-    <div ><td>Message:{{ x.contant }}</td></div>
-    <br>
-</div>
+    <div class="list">
+
+        <a ng-repeat="item in recommendedProducts"
+           class="item item-thumbnail-left">
+
+            <img ng-src="{{ item.imageUrl}}"  style="width: 100px; height: 100px" >
+            <h2>{{item._productName}}</h2>
+            <h3>Price {{ item.price }}</h3>
+            <h4>Quntity:{{ item._quntity }}</h4>
+            <h4>description:{{ item.description }}</h4>
+
+        </a>
+
+    </div>
+
+</ion-content>
+
 
 
 </body>

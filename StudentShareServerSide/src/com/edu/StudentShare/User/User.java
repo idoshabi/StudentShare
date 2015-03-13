@@ -339,12 +339,10 @@ public class User {
 	@POST
 	@Path("/Register")
 	@Produces(MediaType.TEXT_HTML)
-	
 	public Response UserRegister(@FormParam("username") String user,
 			@FormParam("first_Name") String first_Name,
 			@FormParam("last_name") String last_Name,
 			@FormParam("email") String email,
-			@FormParam("birthday") Date birthday1,
 			@FormParam("password") String password,
 			@FormParam("confirm_pwd") String confirm_pwd,
 			@FormParam("image_url") String image_url,
@@ -352,7 +350,7 @@ public class User {
 			@Context HttpServletRequest req) {
 		int id = 0;
 		try {
-			Date birthday = birthday1;
+			Date birthday =null;
 			java.sql.Date date = Utils.TosqlDate(birthday);
 			int initPoints = 100;
 			int initRank = 0;

@@ -2,7 +2,6 @@
 // create angular app
 
 
-var validationApp = angular.module('validationApp',[]);
 
 // configure our routes
 var scotchApp = angular.module('scotchApp', ['ngRoute']);
@@ -35,6 +34,14 @@ scotchApp.config(function($routeProvider, $httpProvider) {
         .when('/ReceivedMessages', {
             templateUrl : 'ReceivedMessages.html',
             controller  : 'MessagesCtrlReceived'
+        })
+        .when('/recommendedProducts', {
+            templateUrl : 'recommendedProducts.html',
+            controller  : 'recommendedProductsCtrl'
+        })
+        .when('/newProduct', {
+            templateUrl : 'newProduct.html',
+            controller  : 'newProductCtrl'
         })
     .when('/SentMessages', {
         templateUrl : 'SentMessages.html',
@@ -116,12 +123,8 @@ scotchApp.controller('NavBarController', ['$scope', '$http','$rootScope','$windo
 
                     }
                 })
-
-
             }
         );
-
-
     }]);
 
 function isAllowedSite(url){
@@ -212,9 +215,7 @@ scotchApp.directive('pwCheck', [function () {
             "&image_url="+$scope.user.image_url+
            "&password="+ $scope.user.password+
             "&confirm_pwd=" +$scope.user.confirm_pwd+
-            "&username="+ $scope.user.username+
-            "&birthday="+ $scope.user.birthday
-        ;
+            "&username="+ $scope.user.username;
         if (isValid) {
 
             $http({
@@ -247,7 +248,7 @@ scotchApp.directive('pwCheck', [function () {
 function isUserConnected(http, callback){
     http({
         method  : 'GET',
-        url     : 'http://localhost:8080/StudentShareProject/rest/User/getIdByUsername',
+        url     : 'http://localhost:8080/StudentShareProject/rest/User/show',
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
     }).success(function(data){
 
@@ -280,10 +281,11 @@ function getIdByUser(user, http, callback){
     });
 
 }
-scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$window',
-    function EventListController($scope, $http, $rootScope, $window) {
+scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$location',
+    function EventListController($scope, $http, $rootScope, $location) {
 
         $scope.submitForm = function(isValid){
+            if(isValid){
             getIdByUser ($scope.message.username,$http, function(data){
 
                     $scope.data = "title=" + $scope.message.title +
@@ -296,32 +298,61 @@ scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$window'
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
                 })
                     .success(function (data) {
-                       alert("SuccessFully sent!");
+                        $location.path('/SentMessages');
+
                     }).error(function (data) {
-                        alert("bad"+data);
+                        $location.path('/SentMessages');
+
                     });
             });
         }
 
 
-    }]);
+    }}]);
 
 scotchApp.controller('MessagesCtrlReceived', ['$scope', '$http','$rootScope','$window',
     function EventListController($scope, $http, $rootScope, $window) {
 
-        getReceivedMessagesById($http, $scope,'RecivedMesseages')
-
+        getMessagesById($http, $scope,'RecivedMesseages');
+        $scope.deleteMessage= function(id){
+    deleteMessage($http,id, function(status){
+        getMessagesById($http, $scope,'RecivedMesseages')
+    });
+        }
     }]);
+
+function deleteMessage(http, id, callback){
+    requestParams = "messeageId=" + id;
+    http({
+        method  : 'POST',
+        url     : 'http://localhost:8080/StudentShareProject/rest/Message/delete',
+        data     : requestParams,  // pass in data as strings
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+    }).success(function(data){
+
+        callback(data);
+    }).error(function(data) {
+        // called asynchronously if an error occurs
+        callback(data);
+
+
+        // or server returns response with an error status.
+    });
+}
 
 scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','$window',
 
     function EventListController($scope, $http, $rootScope, $window) {
-        getReceivedMessagesById($http, $scope,'SentMesseages')
-
+        getMessagesById($http, $scope,'SentMesseages')
+        $scope.deleteMessage= function(id){
+            deleteMessage($http,id, function(status){
+                getMessagesById($http, $scope,'SentMesseages')
+            });
+        }
 
     }]);
 
-function getReceivedMessagesById( $http, scope, type) {
+function getMessagesById( $http, scope, type) {
     var array;
     eval("scope."+type+"={}")
     eval("array = scope."+type);

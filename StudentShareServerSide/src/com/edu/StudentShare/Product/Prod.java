@@ -45,6 +45,8 @@ public class Prod {
 
 	@POST
 	@Path("/add")
+	@Produces(MediaType.TEXT_HTML)
+
 	public Response Addproduct(@FormParam("productName") String productName,
 			@FormParam("price") double price,
 			@FormParam("description") String description,

@@ -6,7 +6,6 @@
     <!-- load bootstrap and fontawesome via CDN -->
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-
     <link rel="stylesheet" type="text/css" href="1.css">
     <script src="js/jquery-1.11.0.min.js"></script>
     <!-- SPELLS -->
@@ -17,17 +16,19 @@
     <script src="js/angular.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/angular-route.js"></script>
- <!--
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="1.css">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
-        -->
-    <script src="app.js"></script>
 
+
+    <!--
+           <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+       <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+       <link rel="stylesheet" type="text/css" href="1.css">
+           <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+           <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+           <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+           <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+           -->
+    <script src="app.js"></script>
+<script src="products.js"></script>
 </head>
     <body>
 
@@ -51,9 +52,10 @@
                     <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-gift"></i> Products <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="#">Buy</a></li>
-                        <li><a href="#">Recommended</a></li>
+                        <li><a href="#recommendedProducts">Recommended</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">New Product</a></li>
+                        <li><a href="#newProduct">New Product</a></li>
+                        <li><a href="#MyProducts">My Products</a></li>
                     </ul>
                 </li>
                 <li><a href="#MyWishes"><i class="glyphicon glyphicon-heart"></i> My Wishes</a></li>
