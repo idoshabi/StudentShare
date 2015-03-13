@@ -199,7 +199,7 @@ public class User {
 
 	@GET
 	@Path("/CheckoutCart")
-	public String CheckoutCart(@Context HttpServletRequest req) {
+	public Response CheckoutCart(@Context HttpServletRequest req) {
 		List<String> data = null;
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
@@ -207,10 +207,11 @@ public class User {
 		data = ShopptingCart.CheckoutPurchase((int) userId);
 		if (data == null)
 		{
-			return "You dont have enough points";
+			return Response.status(400).entity("You dont have enough points").build();
+
 		}
 		
-		return Utils.toJson(data);
+		return Response.status(201).entity(data).build();
 
 	}
 

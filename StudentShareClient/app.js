@@ -4,7 +4,7 @@
 
 
 // configure our routes
-var scotchApp = angular.module('scotchApp', ['ngRoute']);
+var scotchApp = angular.module('scotchApp', ['ngRoute', 'rt.popup']);
 
 
 // configure our routes
@@ -46,6 +46,9 @@ scotchApp.config(function($routeProvider, $httpProvider) {
         .when('/newProduct', {
             templateUrl : 'newProduct.html',
             controller  : 'newProductCtrl'
+        }).when('/MyProducts', {
+            templateUrl : 'MyProducts.html',
+            controller  : 'myProductsCtrl'
         })
     .when('/SentMessages', {
         templateUrl : 'SentMessages.html',
@@ -169,6 +172,9 @@ scotchApp.directive('isUserExist', ['$http',function ($http) {
         }
     }
 }]);
+
+
+
 scotchApp.directive('isUserNotExist', ['$http',function ($http) {
     return {
         require: 'ngModel',
