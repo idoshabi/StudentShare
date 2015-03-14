@@ -86,10 +86,12 @@ public class WishDataJDBC implements WishDataDAO {
 				int user_id = rSet.getInt("user_id");
 				int product_id = rSet.getInt("product_id");
 				Date date_time = rSet.getDate("date_time");
-				
-	
+				int id = rSet.getInt("id");
+
 
 				data = new WishData(user_id, product_id, date_time);
+				
+				data.setId(id);
 			}
 
 		} catch (SQLException e) {

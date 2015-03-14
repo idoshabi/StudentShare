@@ -25,10 +25,10 @@ public class ProductDataJDBC implements ProductDataDAO {
 	private String tablenName = null;
 	Connection conn = null;
 
-	public ProductDataJDBC(String string) {
+	public ProductDataJDBC(String table) {
 		conn = DBConn.getConnection();
 
-		tablenName = string;
+		tablenName = table;
 
 	}
 
@@ -134,14 +134,18 @@ public class ProductDataJDBC implements ProductDataDAO {
 						.prepareStatement(soldCountSql);
 				stmntProduct.setInt(1, productId);
 				stmntProduct.executeUpdate();
+				
+				//Update quntity
 				String quntitySql = "Update " + tablenName
 						+ " SET  quantity = quantity  - 1 Where id = ?";
-
 				PreparedStatement quantitystmntProduct = conn
 						.prepareStatement(quntitySql);
 				quantitystmntProduct.setInt(1, productId);
 				quantitystmntProduct.executeUpdate();
 
+				
+				//Update redis side
+				Products.updateRedisKey(productId, "Product_quntity", -1);
 				return true;
 			}
 		} catch (SQLException e) {

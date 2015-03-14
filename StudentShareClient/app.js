@@ -4,8 +4,7 @@
 
 
 // configure our routes
-var scotchApp = angular.module('scotchApp', ['ngRoute', 'rt.popup']);
-
+var scotchApp = angular.module('scotchApp', ['ngRoute', 'ngDialog']);
 
 // configure our routes
 scotchApp.config(function($routeProvider, $httpProvider) {
@@ -26,6 +25,10 @@ scotchApp.config(function($routeProvider, $httpProvider) {
             templateUrl : 'Login.html',
             controller  : 'loginController'
         })
+        .when('/TopSellers', {
+            templateUrl : 'TopSellers.html',
+            controller  : 'TopSellersCtrl'
+        })
         .when('/Register', {
             templateUrl : 'Register.html',
             controller  : 'RegisterController'
@@ -43,6 +46,10 @@ scotchApp.config(function($routeProvider, $httpProvider) {
             templateUrl : 'shoppingCart.html',
             controller  : 'ShoppingCartCtrl'
         })
+        .when('/MyWishes', {
+            templateUrl : 'WishList.html',
+            controller  : 'WishListCtrl'
+        })
         .when('/newProduct', {
             templateUrl : 'newProduct.html',
             controller  : 'newProductCtrl'
@@ -50,10 +57,40 @@ scotchApp.config(function($routeProvider, $httpProvider) {
             templateUrl : 'MyProducts.html',
             controller  : 'myProductsCtrl'
         })
+        .when('/ThankYouOrder',{
+            templateUrl : 'ThankYouForOrder.html',
+            controller  : 'ThankYouForOrderCtrl'
+        })
     .when('/SentMessages', {
         templateUrl : 'SentMessages.html',
         controller  : 'MessagesCtrlSent'
+
+    }).when('/TheServerIsDown', {
+            templateUrl : 'TheServerIsDown.html',
+            controller  : 'TheServerIsDownCtrl'
+        }).when('/MyAccount', {
+        templateUrl : 'ShowUserProfile.html',
+        controller  : 'showUserCtrl'
     });
+
+
+});
+scotchApp.service('productService', function() {
+    var user = 0
+
+    var addProduct = function(newObj) {
+        user = newObj;
+    }
+
+    var getProducts = function(){
+        return user;
+    }
+
+    return {
+        addProduct: addProduct,
+        getProducts: getProducts
+    };
+
 });
 scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window',
     function EventListController($scope, $http, $rootScope, $window) {
@@ -103,6 +140,8 @@ function  getCurrentLoggedUser(http, callback){
 
         callback (data);
     }).error(function(data, status) {
+
+
         // called asynchronously if an error occurs
         if (status==403){
             callback(data);
@@ -113,22 +152,40 @@ function  getCurrentLoggedUser(http, callback){
 
 scotchApp.controller('NavBarController', ['$scope', '$http','$rootScope','$window', '$location',
     function EventListController($scope, $http, $rootScope, $window, $location) {
+        function disconnect(){
+            $rootScope.isLoggedIn = false;
+            $location.path('/Login');
+
+        }
         onRouteChangeOff = $scope.$on('$locationChangeStart', function (event, newUrl) {
                 isUserConnected($http, function callback(data) {
-                    if (data) {
+                    if (data=='Connected') {
                         $rootScope.isLoggedIn = true;
                         getCurrentLoggedUser($http,function(user){
+                                if (user != null){
                                 $rootScope.loggedUserName = user._userName;
+                                $rootScope.currentPoints = user._score;
+                                }
+                                else{
+                                        disconnect()
+                                }
                             }
                         )
                     }
-                    else {
-                        $rootScope.isLoggedIn = false;
-                        if (!isAllowedSite(newUrl)){
-                            $location.path('/Login');
+                        if (data=='NotConnected') {
+
+                            if (!isAllowedSite(newUrl)) {
+                                disconnect(newUrl)
+                            }
                         }
+                    if(data=='Error'){
+                        $rootScope.isLoggedIn = false;
+                            $location.path('/TheServerIsDown');
 
                     }
+
+
+
                 })
             }
         );
@@ -243,11 +300,7 @@ scotchApp.directive('pwCheck', [function () {
                     return data;
                 })
                 .error(function(data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    alert("bad")
 
-
-                    // or server returns response with an error status.
                 });
         }
 
@@ -261,12 +314,21 @@ function isUserConnected(http, callback){
         url     : 'http://localhost:8080/StudentShareProject/rest/User/show',
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
     }).success(function(data){
+        if (data!=null) {
+            callback('Connected');
+        }
+        else{
+            callback('NotConnected');
 
-       callback (true);
+        }
     }).error(function(data, status) {
         // called asynchronously if an error occurs
         if (status==403){
-            callback(false);
+            callback('NotConnected');
+        }
+        else{
+            callback('Error');
+
         }
         // or server returns response with an error status.
     });
@@ -291,12 +353,15 @@ function getIdByUser(user, http, callback){
     });
 
 }
-scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$location',
-    function EventListController($scope, $http, $rootScope, $location) {
-
+scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$location','productService',
+    function EventListController($scope, $http, $rootScope, $location, productService) {
+        if  (productService.getProducts()!=0) {
+            $scope.username = productService.getProducts();
+            productService.addProduct(null);
+        }
         $scope.submitForm = function(isValid){
             if(isValid){
-            getIdByUser ($scope.message.username,$http, function(data){
+            getIdByUser ($scope.username,$http, function(data){
 
                     $scope.data = "title=" + $scope.message.title +
                     "&contant=" + $scope.message.conant+"&recipientId="+data;

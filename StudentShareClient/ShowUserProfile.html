@@ -1,0 +1,156 @@
+
+<html ng-app="scotchApp" >
+<head lang="en">
+
+</head>
+<body ng-controller="InsideCtrl">
+<hr class="">
+<div class="container target">
+    <div class="row">
+        <div class="col-sm-10">
+            <h1 class="">{{myDeatils._userName}}</h1>
+
+              <button ng-click="sendMessage(myDeatils._userName)" type="button" class="btn btn-info">Send me a message</button>
+            <br>
+        </div>
+        <div class="col-sm-2"><a class="pull-right"><img title="profile image" class="img-circle img-responsive" ng-src="{{myDeatils._imgUrl}}"
+                                                                       fallback-src = "http://s3.amazonaws.com/37assets/svn/765-default-avatar.png"></a>
+
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3">
+            <!--left col-->
+            <ul class="list-group">
+                <li class="list-group-item text-muted" contenteditable="false">Profile</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Full name</strong></span> {{myDeatils._first_name}}{{myDeatils._last_name}}</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Rank: </strong></span> {{myDeatils._userRank}}
+
+
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Email</strong></span>{{myDeatils._email}}</li>
+
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Points</strong></span> {{myDeatils._score}}</li>
+
+
+                </li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i>
+
+                </div>
+                <div class="panel-body"><a href="http://bootply.com" class="">-</a>
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Delete my account
+
+                </div>
+                <div class="panel-body"><i style="color:green" class="fa fa-check-square"></i> <button class="btn btn-warning" ng-click="deleteMyAccount()">Delete</button>
+
+                </div>
+            </div>
+
+        </div>
+        <!--/col-3-->
+        <div class="col-sm-9" contenteditable="false" style="">
+            <div class="panel panel-default">
+                <div class="panel-heading">{{myDeatils._userName}}'s Bio</div>
+                <div class="panel-body"> Not written yet.
+
+                </div>
+            </div>
+            <div class="panel panel-default target">
+                <div class="panel-heading" contenteditable="false">Interests</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <img alt="300x200" src="http://lorempixel.com/600/200/people">
+                                <div class="caption">
+                                    <h3>
+                                        Rover
+                                    </h3>
+                                    <p>
+                                        Cocker Spaniel who loves treats.
+                                    </p>
+                                    <p>
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <img alt="300x200" src="http://lorempixel.com/600/200/city">
+                                <div class="caption">
+                                    <h3>
+                                        Marmaduke
+                                    </h3>
+                                    <p>
+                                        Is just another friendly dog.
+                                    </p>
+                                    <p>
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="thumbnail">
+                                <img alt="300x200" src="http://lorempixel.com/600/200/sports">
+                                <div class="caption">
+                                    <h3>
+                                        Rocky
+                                    </h3>
+                                    <p>
+                                        Loves catnip and naps. Not fond of children.
+                                    </p>
+                                    <p>
+
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+                </div>
+
+
+
+        <div id="push"></div>
+    </div>
+
+
+
+    <script type="text/ng-template" id="firstDialogId">
+        <div class="ngdialog-message">
+            <h3>ngDialog template</h3>
+            <p ng-show="theme">Test content for <code>{{theme}}</code></p>
+            <p ng-show="ngDialogData.foo">Data passed through: <code>{{ngDialogData.foo}}</code></p>
+            <p ng-show="dialogModel.message">Scope passed through: <code>{{dialogModel.message}}</code></p>
+        </div>
+        <div class="ngdialog-buttons">
+            <button type="button" class="ngdialog-button ngdialog-button-secondary"
+                    ng-dialog="secondDialogId"
+                    ng-dialog-class="ngdialog-theme-default"
+                    ng-dialog-controller="SecondModalCtrl"
+                    ng-dialog-close-previous>Let me thing about it...</button>
+            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="openSecond()">Yes, Delete!</button>
+        </div>
+    </script>
+
+
+
+</div>
+</body>
+</html>

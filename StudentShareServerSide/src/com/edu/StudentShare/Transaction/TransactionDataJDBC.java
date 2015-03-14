@@ -54,9 +54,6 @@ public class TransactionDataJDBC implements TransactionDataDAO {
 			}
 			
 			
-			
-			
-
 			// Decrease the buyer points first in order to catch any fraud
 			// issues
 			User.userJdbc.UpdateUserPoints(data.getBuyerId(),

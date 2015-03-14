@@ -23,15 +23,15 @@
         <a ng-repeat="item in recommendedProducts"
            class="item item-thumbnail-left">
 
-            <img ng-src="{{ item.imageUrl}}"  fallback-src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" style="width: 100px; height: 100px" >
+            <img ng-src="{{item.imageUrl}}"  fallback-src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" style="width: 100px; height: 100px" >
             <h2>{{item._productName}}</h2>
             <h4>Left:{{ item._quntity }}</h4>
             <h4>description:{{ item.description }}</h4>
-
-            <span ng-click="addToCart(item.id)" class="glyphicon glyphicon-heart" style=" color: #007aff; font-size: large">
+            <h4>Seller: {{item.sellerName}}</h4>
+            <span ng-click="addWish(item.id)" class="glyphicon glyphicon-heart" style=" color: #007aff; font-size: large">
             </span>
             <div class="pull-right">
-                <button type="submit" ng-click="addToCart(item.id)" class="btn btn-primary">
+                <button type="submit" ng-click="addToCart(item.id)" class="btn btn-primary" ng-disabled="item._quntity==0">
                  <i ng class="glyphicon glyphicon-shopping-cart"> {{ item.price }}$</i>
                 </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -44,8 +44,6 @@
     </div>
 
 </ion-content>
-
-
 
 </body>
 </html>

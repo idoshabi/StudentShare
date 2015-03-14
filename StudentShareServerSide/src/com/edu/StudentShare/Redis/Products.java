@@ -36,6 +36,13 @@ public class Products {
 			jedis.set(getUniqueSet(productId), uniqueId);
 		}
 	}
+	
+	public static void updateRedisKey(int productId, String field, int value){
+		try (Jedis jedis = ConnectionPool.pool.getResource()) {
+			jedis.hincrBy(setItemProductUnique(productId), field, value)
+			;}
+		
+	}
 	private static String getUniqueSet(int userId)
 	{
 		String path = String.format("Products%s", userId);

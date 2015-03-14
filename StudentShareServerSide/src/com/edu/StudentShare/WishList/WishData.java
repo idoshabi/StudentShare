@@ -36,6 +36,12 @@ public class WishData {
 	int userId;
 	int productId;
 	Date dataTime;
-
+	int id;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 }
