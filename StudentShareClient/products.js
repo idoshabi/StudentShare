@@ -79,8 +79,8 @@ function deleteWish(http, id, callback){
         // or server returns response with an error status.
     });
 }
-scotchApp.controller('WishListCtrl', ['$scope', '$http','$rootScope','$window',
-    function EventListController($scope, $http, $rootScope, $window) {
+scotchApp.controller('WishListCtrl', ['$scope', '$http','$rootScope','$window','myDataService',
+    function EventListController($scope, $http, $rootScope, $window, WishListCtrl) {
 
         $scope.deleteWish= function(id){
 
@@ -99,13 +99,14 @@ scotchApp.controller('WishListCtrl', ['$scope', '$http','$rootScope','$window',
 
                 for (index=0; index < data.length; ++index) {
                     $scope.wishList[index].id = data[index].id;
+                    //WishListCtrl.addWishToDB($scope.wishList[index]);
 
                     getProductById(data[index].productId, $http, index, function(info, counter ){
                         $scope.wishList[counter].product = info;
 
+
                     });
                 }
-
             }).error(function (data, status) {
                 // called asynchronously if an error occurs
                 alert(data);
@@ -210,10 +211,9 @@ function addWish(http, productId, ngDialog){
             });
         });
 }
-scotchApp.controller('recommendedProductsCtrl', ['$scope', '$http','$rootScope','ngDialog',
-    function EventListController($scope, $http, $rootScope, ngDialog) {
+scotchApp.controller('recommendedProductsCtrl', ['$scope', '$http','$rootScope','ngDialog', 'myDataService',
+    function EventListController($scope, $http, $rootScope, ngDialog, myDataService) {
         data = {max:200};
-
         $scope.addToCart = function(id){
             addItemToCart($http, id, function(data){
                 ngDialog.open({
@@ -239,15 +239,25 @@ scotchApp.controller('recommendedProductsCtrl', ['$scope', '$http','$rootScope',
             for (i = 0 ;i<data.length;i++ )
             {
                 getUserById(data[i]._seller_id, $http, i, function(data, index){
-                    $rootScope.recommendedProducts[index].sellerName = data._userName
+                    $rootScope.recommendedProducts[index].sellerName = data._userName;
                 })
             }
+
+            addProductsToDB(myDataService, data);
+
         }).error(function(data, status) {
             // called asynchronously if an error occurs
 
             // or server returns response with an error status.
         });
     }]);
+
+    function addProductsToDB(Service, data){
+        for (i = 0 ;i<data.length;i++ )
+        {
+            Service.addProductToDB(data[i]);
+        }
+    }
 
     function GetSellerDetails(http, id, callback){
 
@@ -287,7 +297,7 @@ scotchApp.controller('recommendedProductsCtrl', ['$scope', '$http','$rootScope',
             // or server returns response with an error status.
         });
     }
-scotchApp.directive('searchProducts', ['$http', '$rootScope',function ($http, $rootScope) {
+scotchApp.directive('searchProducts', ['$http', '$rootScope','myDataService',function ($http, $rootScope, myDataService) {
     return {
         require: 'ngModel',
         link: function (scope, elem, attrs, ctrl) {
@@ -295,6 +305,7 @@ scotchApp.directive('searchProducts', ['$http', '$rootScope',function ($http, $r
                 SearchProducts( $http, elem.val(), function(data){
 
                         $rootScope.recommendedProducts = data;
+                    myDataService.addSearchToDB(elem.val());
                 });
 
             });

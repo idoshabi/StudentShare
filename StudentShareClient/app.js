@@ -5,7 +5,9 @@
 
 
 // configure our routes
-var scotchApp = angular.module('scotchApp', ['ngRoute', 'ngDialog']);
+var scotchApp = angular.module('scotchApp', ['ngRoute', 'ngDialog']).run(function(localDbManager) {
+    localDbManager.init();
+});
 
 angular.module('myApp.controllers', ['myApp.services'])
     .controller('DocumentCtrl', function($scope, Document) {
@@ -126,9 +128,8 @@ scotchApp.config(function($routeProvider, $httpProvider) {
 
 
 });
-scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window', 'myDataService',
-    function EventListController($scope, $http, $rootScope, $window, myDataService) {
-        myDataService.getState(1,2,4);
+scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window',
+    function EventListController($scope, $http, $rootScope, $window) {
         // function to submit the form after all validation has occurred
     $scope.submitForm = function(isValid) {
         // check to make sure the form is completely valid
@@ -419,14 +420,14 @@ scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$locatio
 
     }}]);
 
-scotchApp.controller('MessagesCtrlReceived', ['$scope', '$http','$rootScope','ShowUserService','$location',
-    function EventListController($scope, $http, $rootScope, ShowUserService,$location) {
+scotchApp.controller('MessagesCtrlReceived', ['$scope', '$http','$rootScope','ShowUserService','$location', 'myDataService',
+    function EventListController($scope, $http, $rootScope, ShowUserService,$location, myDataService) {
         $scope.showProfile = function(id){
             ShowUserService.addProduct(id);
             $location.path('/Account');
         }
 
-        getMessagesById($http, $scope,'RecivedMesseages');
+        getMessagesById($http, $scope,'RecivedMesseages', myDataService);
         $scope.deleteMessage= function(id){
     deleteMessage($http,id, function(status){
         getMessagesById($http, $scope,'RecivedMesseages')
@@ -471,19 +472,19 @@ function addToCart(http, id, callback){
         // or server returns response with an error status.
     });
 }
-scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','ShowUserService',
+scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','ShowUserService','myDataService',
 
-    function EventListController($scope, $http, $rootScope, ShowUserService, $sqlite) {
+    function EventListController($scope, $http, $rootScope, ShowUserService, $sqlite, myDataService) {
         getMessagesById($http, $scope,'SentMesseages')
         $scope.deleteMessage= function(id){
             deleteMessage($http,id, function(status){
-                getMessagesById($http, $scope,'SentMesseages')
+                getMessagesById($http, $scope,'SentMesseages', myDataService)
             });
         }
 
     }]);
 
-function getMessagesById( $http, scope, type) {
+function getMessagesById( $http, scope, type, myDataService) {
     var array;
     eval("scope."+type+"={}")
     eval("array = scope."+type);
@@ -503,6 +504,7 @@ function getMessagesById( $http, scope, type) {
                 if (result!= null){
 
                     array[index].senderUserName=  result._userName;
+                    myDataService.addMessageToDB(array[index]);
                 }
 
             }
@@ -511,10 +513,13 @@ function getMessagesById( $http, scope, type) {
                     if (result!= null){
 
                         array[index].reciverUserName=  result._userName;
+                        myDataService.addMessageToDB(array[index]);
+
                     }
                     }
                 );
             }
+
             scope.arrayLength = index;
         }
     ).error(function (data, status) {
