@@ -7,7 +7,7 @@
 <hr class="">
 <div class="container target">
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-10" ng-show="!isMyUser">
             <h1 class="">{{myDeatils._userName}}</h1>
 
               <button ng-click="sendMessage(myDeatils._userName)" type="button" class="btn btn-info">Send me a message</button>
@@ -44,7 +44,7 @@
 
                 </div>
             </div>
-            <div class="panel panel-default">
+            <div class="panel panel-default" ng-show="isMyUser">
                 <div class="panel-heading">Delete my account
 
                 </div>
@@ -144,7 +144,7 @@
                     ng-dialog="secondDialogId"
                     ng-dialog-class="ngdialog-theme-default"
                     ng-dialog-controller="SecondModalCtrl"
-                    ng-dialog-close-previous>Let me thing about it...</button>
+                    ng-dialog-close-previous>Let me thing o</button>
             <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="openSecond()">Yes, Delete!</button>
         </div>
     </script>

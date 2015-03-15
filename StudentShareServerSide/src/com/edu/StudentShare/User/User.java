@@ -223,7 +223,6 @@ public class User {
 		int id = 0;
 		ArrayList<UserData> list = null;
 		try {
-
 			list = Users.getTopUsers(max);
 
 		} catch (Exception e) {
@@ -245,7 +244,18 @@ public class User {
 		return Utils.toJson(data);
 
 	}
+	@GET
+	@Path("/showUserSomeData")
+	@Produces(MediaType.APPLICATION_JSON)
+	
+	public String showSomeUser(@QueryParam("id") int id ,@Context HttpServletRequest req ) {
+		UserData data = null;
 
+		data = userJdbc.showUserInfo(id);
+
+		return Utils.toJson(data);
+
+	}
 	@GET
 	@Path("/addToCart")
 	@Produces(MediaType.TEXT_HTML)
@@ -365,9 +375,10 @@ public class User {
 						first_Name, last_Name, initRank, initPoints, image_url);
 
 				id = userJdbc.createNewUser(userData);
+				userData.setId(id);
 				// Save the user_id to the session
 				saveSession(req, id);
-
+					
 				Users.setUser(id, userData);
 
 			}

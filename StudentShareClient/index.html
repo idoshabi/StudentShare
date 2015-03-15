@@ -6,7 +6,7 @@
     <!-- load bootstrap and fontawesome via CDN -->
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="1.css">
+    <link rel="stylesheet" type="text/css" href="Style.css">
     <link rel="stylesheet" type="text/css" href="css/ngDialog.css">
     <link rel="stylesheet" type="text/css" href="css/ngDialog.min.css">
     <link rel="stylesheet" type="text/css" href="css/ngDialog-theme-default.css">
@@ -31,10 +31,11 @@
 
 
 
-    <!--
+
            <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-       <link rel="stylesheet" type="text/css" href="1.css">
+       <link rel="stylesheet" type="text/css" href="Style.css">
+    <!--
            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
            <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
@@ -43,6 +44,11 @@
     <script src="app.js"></script>
     <script src="products.js"></script>
     <script src="users.js"></script>
+    <script src="SqlLite/db_config.js"></script>
+    <script src="SqlLite/sqlite.js"></script>
+    <script src="SqlLite/sqlLiteService.js"></script>
+    <script src="SqlLite/local_db_manager.js"></script>
+
 </head>
     <body>
 
@@ -61,7 +67,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
                 <li ng-show="!isLoggedIn"><a href="#Register"><i class="glyphicon glyphicon-home"></i> Register</a></li>
-                <li><a href="#MyAccount"><i class="glyphicon glyphicon-user "></i> My Account</a></li>
+                <li><a href="#Account"><i class="glyphicon glyphicon-user "></i> My Account</a></li>
                 <li><a href="#shoppingCart"><i class="glyphicon glyphicon-shopping-cart"></i> Cart </a></li>
 
                 <li class="dropdown">

@@ -138,8 +138,8 @@ scotchApp.controller('myProductsCtrl', ['$scope', '$http','$rootScope','$window'
 
 ]);
 
-    scotchApp.controller('newProductCtrl', ['$scope', '$http','$rootScope','ngDialog',
-        function EventListController($scope, $http, $rootScope, ngDialog) {
+    scotchApp.controller('newProductCtrl', ['$scope', '$http','$rootScope','ngDialog','$location',
+        function EventListController($scope, $http, $rootScope, ngDialog, $location) {
             $scope.submitForm = function(isValid){
 
                 if(isValid){
@@ -164,6 +164,7 @@ scotchApp.controller('myProductsCtrl', ['$scope', '$http','$rootScope','$window'
                         plain: true,
                         overlay: true
                     });
+                    $location.path('/MyProducts');
                 })
                 .error(function(data) {
                 });

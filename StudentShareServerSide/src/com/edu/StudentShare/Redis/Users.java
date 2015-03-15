@@ -25,7 +25,10 @@ public class Users {
 			jedis.hset(uniqueId, "User:UserName", data.get_userName());
 			jedis.hset(uniqueId, "User:User_email",String.valueOf(data.get_email()));
 			jedis.hset(uniqueId, "User:imgUrl", data.get_imgUrl());
-			
+ 			jedis.hset(uniqueId, "User:Rank", String.valueOf((int)data.get_userRank()));
+			jedis.hset(uniqueId, "User:score", String.valueOf((int)data.get_score()));
+			jedis.hset(uniqueId, "User:id", String.valueOf(data.getId()));
+
 			jedis.set(getUniqueSet(UserId), uniqueId);
 			
 			OnlineUsers.addUser(UserId);
@@ -41,6 +44,7 @@ public class Users {
 	public static ArrayList<UserData> getTopUsers(int max) {
 		try (Jedis jedis = ConnectionPool.pool.getResource()) {
 			UserData data;
+			
 			ArrayList<UserData> list = new ArrayList<UserData>();
 			// / ... do stuff here ... for example
 			Set<String> zSet = jedis.zrangeByScore(key, "-inf", "+inf",0, max);
@@ -52,17 +56,43 @@ public class Users {
 
 		}
 	}
+	
+	public static void updateRedisKey(int UserId, String field, short value){
+		try (Jedis jedis = ConnectionPool.pool.getResource()) {
+			jedis.hincrBy(setItemUserUnique(UserId), field, value)
+			;}
+		
+	}public static void updateRedisKey(int UserId, String field, int value){
+		try (Jedis jedis = ConnectionPool.pool.getResource()) {
+			jedis.hincrBy(setItemUserUnique(UserId), field, value)
+			;}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void updateRedisKey(int UserId, String field, double value){
+		try (Jedis jedis = ConnectionPool.pool.getResource()) {
+			jedis.hincrByFloat(setItemUserUnique(UserId), field, value)
+			;}catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+	}
 	public static void removeUser(int UserId) {
 		try (Jedis jedis = ConnectionPool.pool.getResource()) {
-			jedis.zrem(key, getUniqueSet(UserId));
+			jedis.zrem(key, setItemUserUnique(UserId));
 
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	public static UserData getUserById(int UserId) {
 		UserData data = null;
 		try (Jedis jedis = ConnectionPool.pool.getResource()) {
-			String score = jedis.get(getUniqueSet(UserId));
+			String score = jedis.get(setItemUserUnique(UserId));
 			if (score != null) {
 				data = getUserByScore(jedis, score);
 			}
@@ -76,11 +106,11 @@ public class Users {
 		}
 		return data;
 	}
-	public static void increaseUserRank(int userId, int rankToAdd)
+	public static void increaseUserRank(int userId, double rankToAdd)
 	{
 		try (Jedis jedis = ConnectionPool.pool.getResource()) {
-			jedis.zincrby(key, rankToAdd, getUniqueSet(userId));
-
+			jedis.zincrby(key, rankToAdd, setItemUserUnique(userId));
+				updateRedisKey(userId, "User:Rank", (int)rankToAdd);
 		}
 		
 	}
@@ -91,13 +121,20 @@ public class Users {
 			String User_Name = jedis.hget(uniqueId, "User:UserName");
 			String User_email = jedis.hget(uniqueId,"User:User_email");
 			String imgUrl = jedis.hget(uniqueId, "User:imgUrl");
+			String rank = jedis.hget(uniqueId, "User:Rank");
+			String points = jedis.hget(uniqueId, "User:score"); 
+			int id = Integer.valueOf(jedis.hget(uniqueId, "User:id"));
 			
+			double x = jedis.zscore(key , uniqueId);
 			data = new UserData(); 		
 			data.set_userName(User_Name);
 			data.set_email(User_email);
 			data.set_imgUrl(imgUrl);
+			data.set_userRank(Double.parseDouble(rank));
+			data.set_score(Double.parseDouble(points));
+			data.setId(id);
 			
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -15,6 +15,7 @@ import java.util.ListIterator;
 import com.edu.StudentShare.DBConn;
 import com.edu.StudentShare.AuthFilter;
 import com.edu.StudentShare.Redis.Products;
+import com.edu.StudentShare.Redis.Users;
 import com.edu.StudentShare.Transaction.Transac;
 import com.edu.StudentShare.Transaction.TransactionData;
 import com.edu.StudentShare.User.User;
@@ -194,7 +195,11 @@ public class ProductDataJDBC implements ProductDataDAO {
 						ProdData.get_seller_id(), buyerId, product_id,
 						ProdData.getPrice(), ProdData.getPostTime());
 				
-				User.userJdbc.UpdateUserRank(buyerId, 0.1); 
+				User.userJdbc.UpdateUserRank(buyerId, 1); 
+				Users.increaseUserRank(buyerId, 1);
+				Users.increaseUserRank(ProdData.get_seller_id(), 2);
+				Users.updateRedisKey(buyerId, "User:score",  ((int)(-1*ProdData.getPrice())));
+				Users.updateRedisKey(ProdData.get_seller_id(), "User:score", (int)ProdData.getPrice());
 
 				User.userJdbc.UpdateUserRank(ProdData.get_seller_id(), 1); 
 

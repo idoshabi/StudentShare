@@ -1,3 +1,4 @@
+
 // app.js
 // create angular app
 
@@ -5,6 +6,56 @@
 
 // configure our routes
 var scotchApp = angular.module('scotchApp', ['ngRoute', 'ngDialog']);
+
+angular.module('myApp.controllers', ['myApp.services'])
+    .controller('DocumentCtrl', function($scope, Document) {
+        $scope.documents = [];
+        $scope.document = null;
+        // Get all the documents
+        Document.all().then(function(documents){
+            $scope.documents = documents;
+        });
+        // Get one document, example with id = 2
+        Document.getById(2).then(function(document) {
+            $scope.document = document;
+        });
+    });
+
+
+scotchApp.service('ShowUserService', function() {
+    var user = 0
+
+    var addProduct = function(newObj) {
+        user = newObj;
+    }
+
+    var getProducts = function(){
+        return user;
+    }
+
+    return {
+        addProduct: addProduct,
+        getProducts: getProducts
+    };
+
+});
+scotchApp.service('productService', function() {
+    var user = 0
+
+    var addProduct = function(newObj) {
+        user = newObj;
+    }
+
+    var getProducts = function(){
+        return user;
+    }
+
+    return {
+        addProduct: addProduct,
+        getProducts: getProducts
+    };
+
+});
 
 // configure our routes
 scotchApp.config(function($routeProvider, $httpProvider) {
@@ -68,34 +119,17 @@ scotchApp.config(function($routeProvider, $httpProvider) {
     }).when('/TheServerIsDown', {
             templateUrl : 'TheServerIsDown.html',
             controller  : 'TheServerIsDownCtrl'
-        }).when('/MyAccount', {
+        }).when('/Account', {
         templateUrl : 'ShowUserProfile.html',
         controller  : 'showUserCtrl'
     });
 
 
 });
-scotchApp.service('productService', function() {
-    var user = 0
-
-    var addProduct = function(newObj) {
-        user = newObj;
-    }
-
-    var getProducts = function(){
-        return user;
-    }
-
-    return {
-        addProduct: addProduct,
-        getProducts: getProducts
-    };
-
-});
-scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window',
-    function EventListController($scope, $http, $rootScope, $window) {
-
-    // function to submit the form after all validation has occurred
+scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window', 'myDataService',
+    function EventListController($scope, $http, $rootScope, $window, myDataService) {
+        myDataService.getState(1,2,4);
+        // function to submit the form after all validation has occurred
     $scope.submitForm = function(isValid) {
         // check to make sure the form is completely valid
         if (!isValid) {
@@ -385,8 +419,12 @@ scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$locatio
 
     }}]);
 
-scotchApp.controller('MessagesCtrlReceived', ['$scope', '$http','$rootScope','$window',
-    function EventListController($scope, $http, $rootScope, $window) {
+scotchApp.controller('MessagesCtrlReceived', ['$scope', '$http','$rootScope','ShowUserService','$location',
+    function EventListController($scope, $http, $rootScope, ShowUserService,$location) {
+        $scope.showProfile = function(id){
+            ShowUserService.addProduct(id);
+            $location.path('/Account');
+        }
 
         getMessagesById($http, $scope,'RecivedMesseages');
         $scope.deleteMessage= function(id){
@@ -433,9 +471,9 @@ function addToCart(http, id, callback){
         // or server returns response with an error status.
     });
 }
-scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','$window',
+scotchApp.controller('MessagesCtrlSent', ['$scope', '$http','$rootScope','ShowUserService',
 
-    function EventListController($scope, $http, $rootScope, $window) {
+    function EventListController($scope, $http, $rootScope, ShowUserService, $sqlite) {
         getMessagesById($http, $scope,'SentMesseages')
         $scope.deleteMessage= function(id){
             deleteMessage($http,id, function(status){

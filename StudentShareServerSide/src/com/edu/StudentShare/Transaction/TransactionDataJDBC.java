@@ -47,7 +47,7 @@ public class TransactionDataJDBC implements TransactionDataDAO {
 			double transactionPoints = data.getPoint_amount();
 			double buyerPointUser = User.userJdbc.getNumberOfPoints(data
 					.getBuyerId());
-			if (buyerPointUser < transactionPoints) {
+		if (buyerPointUser < transactionPoints) {
 				System.out
 						.println("Failed at makeTransaction,  user dont have enght points");
 				return -1;

@@ -3,12 +3,16 @@ package com.edu.StudentShare.User;
 import java.util.Date;
 
 public class UserData {
+
+
+
 @Override
 	public String toString() {
 		return "UserData [_userName=" + _userName + ", _password=" + _password
 				+ ", _email=" + _email + ", _birthday=" + _birthday
 				+ ", _first_name=" + _first_name + ", _last_name=" + _last_name
-				+ ", _userRank=" + _userRank + ", _score=" + _score + "]";
+				+ ", _userRank=" + _userRank + ", _score=" + _score
+				+ ", _imgUrl=" + _imgUrl + ", id=" + id + "]";
 	}
 
 public UserData(String _userName, String _password, String _email,
@@ -38,6 +42,15 @@ private String _last_name;
 private double _userRank;
 private double _score;
 private String _imgUrl;
+private int id;
+
+public int getId() {
+	return id;
+}
+
+public void setId(int id) {
+	this.id = id;
+}
 
 public double get_score() {
 	return _score;
@@ -63,7 +76,7 @@ public void set_birthday(Date _birthday) {
 public double get_userRank() {
 	return _userRank;
 }
-public void set_userRank(short _userRank) {
+public void set_userRank(double _userRank) {
 	this._userRank = _userRank;
 }
 public String get_email() {
