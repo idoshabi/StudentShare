@@ -1,0 +1,115 @@
+    <!-- index.html -->
+<!DOCTYPE html>
+<html ng-app="scotchApp">
+<head>
+    <!-- SCROLLS -->
+    <!-- load bootstrap and fontawesome via CDN -->
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="Style.css">
+    <link rel="stylesheet" type="text/css" href="css/ngDialog.css">
+    <link rel="stylesheet" type="text/css" href="css/ngDialog.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ngDialog-theme-default.css">
+    <link rel="stylesheet" type="text/css" href="css/ngDialog-theme-plain.css">
+    <link rel="stylesheet" type="text/css" href="css/ionic.css">
+
+
+
+    <!-- SPELLS -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/jquery-1.11.2.min.map"></script>
+    <script src="js/jquery-1.11.2.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular-route.js"></script>
+    <script src="js/ionic.bundle.js"></script>
+    <script src="js/angular-rt-popup.min.js"></script>
+    <script src="js/angular-rt-popup.js"></script>
+    <script src="js/ngDialog.min.js"></script>
+    <script src="js/ngDialog.js"></script>
+
+
+
+
+           <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+       <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+       <link rel="stylesheet" type="text/css" href="Style.css">
+    <!--
+           <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+           <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+           <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+           <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+           -->
+    <script src="app.js"></script>
+    <script src="products.js"></script>
+    <script src="users.js"></script>
+    <script src="SqlLite/db_config.js"></script>
+    <script src="SqlLite/sqlite.js"></script>
+    <script src="SqlLite/NgService.js"></script>
+    <script src="SqlLite/db-Mgmt-SQLLite.js"></script>
+    <script src="SqlLite/controllers.js"></script>
+    <script src="SqlLite/services.js"></script>
+
+
+</head>
+    <body>
+
+    <!-- HEADER AND NAVBAR -->
+<header ng-controller="NavBarController">
+    <nav class="navbar navbar-default" style="color: deepskyblue">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" rel="home" href="#/" title="StudentShare by ido shabi">
+                    <img style="max-width:100px; margin-top: -15px;"
+                         src="images/logo.png">
+                    StudentShare
+                </a>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+                <li ng-show="!isLoggedIn"><a href="#Register"><i class="glyphicon glyphicon-home"></i> Register</a></li>
+                <li><a href="#Account"><i class="glyphicon glyphicon-user "></i> My Account</a></li>
+                <li><a href="#shoppingCart"><i class="glyphicon glyphicon-shopping-cart"></i> Cart </a></li>
+
+                <li class="dropdown">
+                    <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-gift"></i> Products <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#TopSellers">Top sellers</a></li>
+                        <li><a href="#recommendedProducts">Recommended</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#newProduct">New Product</a></li>
+                        <li><a href="#MyProducts">My Products</a></li>
+                    </ul>
+                </li>
+                <li><a href="#MyWishes"><i class="glyphicon glyphicon-heart"></i>  Wishes</a></li>
+                <li x class="dropdown">
+                    <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-comment"></i> Messages <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#ReceivedMessages">Received</a></li>
+                        <li><a href="#SentMessages">Sent</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#newMessage">New Message</a></li>
+
+                    </ul>
+                </li>
+             <li ng-show="isLoggedIn"><a class="p.thick">Hello <span class="userBold">{{loggedUserName}}</span> &nbsp;&nbsp;score:<span class="msg-sucess">{{currentPoints}}</span></a></li>
+             <li ng-show="!isLoggedIn"><a href="#Login">You are not connected, connect</a></li>
+
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<!-- MAIN CONTENT AND INJECTED VIEWS -->
+<div id="main">
+    <div ng-view></div>
+
+    <!-- angular templating -->
+    <!-- this is where content will be injected -->
+
+</div>
+
+</body>
+</html>

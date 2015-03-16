@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+</head>
+
+<!-- apply angular app and controller to our body -->
+<body  ng-app="scotchApp" ng-controller="WishListCtrl">
+
+
+<ion-content>
+
+    <div class="list">
+        <span class="noWishFound" ng-show="wishList==0">You didn't add any wish, please press the <i class="glyphicon glyphicon-heart">
+            </i> below every product to track. <br> <span class="noWishFound2">You'll get message when a product's price you wished for change, and get sales and offers!<br><br><br><br></span>
+
+        </span>
+        <a ng-repeat="item in wishList" class="item item-thumbnail-left">
+
+            <img ng-src="{{item.product.imageUrl}}"  fallback-src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" style="width: 100px; height: 100px" >
+            <h2>{{item.product._productName}}</h2>
+            <h4>Left:{{ item.product._quntity }}</h4>
+            <h4>description:{{ item.product.description }}</h4>
+            </span>
+            <span class="pull-right">
+                                    <span ng-click="deleteWish(item.id)" class="glyphicon glyphicon-remove-circle"></span>
+                                    </span>
+            <div class="pull-right">
+
+
+
+
+            </div>
+
+        </a>
+
+    </div>
+
+</ion-content>
+
+</body>
+</html>

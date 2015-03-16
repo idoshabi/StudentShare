@@ -24,21 +24,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.55172414" vertical-offset="1767" max-vertical-offset="9503">
-              <caret line="103" column="39" selection-start-line="103" selection-start-column="27" selection-end-line="103" selection-end-column="39" />
+            <state vertical-scroll-proportion="0.54336286" vertical-offset="2311" max-vertical-offset="9588">
+              <caret line="154" column="66" selection-start-line="0" selection-start-column="0" selection-end-line="558" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="products.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="login1.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/login1.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-9.346154" vertical-offset="165" max-vertical-offset="986">
+              <caret line="24" column="52" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="52" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="products.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/products.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4884956" vertical-offset="1322" max-vertical-offset="6477">
-              <caret line="94" column="22" selection-start-line="94" selection-start-column="22" selection-end-line="94" selection-end-column="64" />
+            <state vertical-scroll-proportion="-5.275862" vertical-offset="153" max-vertical-offset="6477">
+              <caret line="27" column="14" selection-start-line="27" selection-start-column="14" selection-end-line="32" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -47,8 +57,8 @@
       <file leaf-file-name="users.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/users.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.4827585" vertical-offset="373" max-vertical-offset="2482">
-              <caret line="33" column="99" selection-start-line="33" selection-start-column="84" selection-end-line="33" selection-end-column="99" />
+            <state vertical-scroll-proportion="-22.12069" vertical-offset="910" max-vertical-offset="2482">
+              <caret line="129" column="13" selection-start-line="129" selection-start-column="13" selection-end-line="129" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -77,8 +87,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.5714286" vertical-offset="989" max-vertical-offset="2057">
-              <caret line="61" column="39" selection-start-line="61" selection-start-column="39" selection-end-line="61" selection-end-column="39" />
+            <state vertical-scroll-proportion="-1.6190476" vertical-offset="1037" max-vertical-offset="2057">
+              <caret line="69" column="42" selection-start-line="69" selection-start-column="42" selection-end-line="69" selection-end-column="42" />
               <folding>
                 <element signature="n#style#0;n#nav#0;n#header#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#img#0;n#a#0;n#div#0;n#div#0;n#nav#0;n#header#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -92,16 +102,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-5.230769" vertical-offset="119" max-vertical-offset="816">
               <caret line="15" column="185" selection-start-line="15" selection-start-column="185" selection-end-line="15" selection-end-column="185" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Style.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.5172415" vertical-offset="301" max-vertical-offset="2210">
-              <caret line="22" column="21" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -159,7 +159,6 @@
         <option value="$PROJECT_DIR$/TopSellers.html" />
         <option value="$PROJECT_DIR$/ShowUserProfile.html" />
         <option value="$PROJECT_DIR$/1.css" />
-        <option value="$PROJECT_DIR$/users.js" />
         <option value="$PROJECT_DIR$/ReceivedMessages.html" />
         <option value="$PROJECT_DIR$/SentMessages.html" />
         <option value="$PROJECT_DIR$/sqlLiteService.js" />
@@ -172,12 +171,13 @@
         <option value="$PROJECT_DIR$/SqlLite/local_db_manager.js" />
         <option value="$PROJECT_DIR$/SqlLite/sqlLiteService.js" />
         <option value="$PROJECT_DIR$/SqlLite/db-Mgmt-SQLLite.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/Style.css" />
         <option value="$PROJECT_DIR$/WishList.html" />
         <option value="$PROJECT_DIR$/SqlLite/NgService.js" />
         <option value="$PROJECT_DIR$/SqlLite/db_config.js" />
         <option value="$PROJECT_DIR$/products.js" />
+        <option value="$PROJECT_DIR$/users.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -245,34 +245,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="StudentShareClient" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StudentShareProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StudentShareClient" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SqlLite" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StudentShareProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StudentShareClient" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="images" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -442,12 +414,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>291</line>
+          <line>220</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>497</line>
+          <line>415</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -520,13 +492,6 @@
       </provider>
       <provider editor-type-id="sourcemapFileViewerProvider">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.418182" vertical-offset="63" max-vertical-offset="986">
-          <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/css/ionic.css">
@@ -833,22 +798,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55172414" vertical-offset="1767" max-vertical-offset="9503">
-          <caret line="103" column="39" selection-start-line="103" selection-start-column="27" selection-end-line="103" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/users.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.4827585" vertical-offset="373" max-vertical-offset="2482">
-          <caret line="33" column="99" selection-start-line="33" selection-start-column="84" selection-end-line="33" selection-end-column="99" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SqlLite/db_config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.034483" vertical-offset="289" max-vertical-offset="1598">
@@ -857,10 +806,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/users.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-22.12069" vertical-offset="910" max-vertical-offset="2482">
+          <caret line="129" column="13" selection-start-line="129" selection-start-column="13" selection-end-line="129" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login1.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.346154" vertical-offset="165" max-vertical-offset="986">
+          <caret line="24" column="52" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/products.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.275862" vertical-offset="153" max-vertical-offset="6477">
+          <caret line="27" column="14" selection-start-line="27" selection-start-column="14" selection-end-line="32" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5714286" vertical-offset="989" max-vertical-offset="2057">
-          <caret line="61" column="39" selection-start-line="61" selection-start-column="39" selection-end-line="61" selection-end-column="39" />
+        <state vertical-scroll-proportion="-1.6190476" vertical-offset="1037" max-vertical-offset="2057">
+          <caret line="69" column="42" selection-start-line="69" selection-start-column="42" selection-end-line="69" selection-end-column="42" />
           <folding>
             <element signature="n#style#0;n#nav#0;n#header#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#0;n#a#0;n#div#0;n#div#0;n#nav#0;n#header#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -868,10 +841,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/products.js">
+    <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4884956" vertical-offset="1322" max-vertical-offset="6477">
-          <caret line="94" column="22" selection-start-line="94" selection-start-column="22" selection-end-line="94" selection-end-column="64" />
+        <state vertical-scroll-proportion="0.54336286" vertical-offset="2311" max-vertical-offset="9588">
+          <caret line="154" column="66" selection-start-line="0" selection-start-column="0" selection-end-line="558" selection-end-column="0" />
           <folding />
         </state>
       </provider>

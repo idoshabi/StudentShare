@@ -1,0 +1,50 @@
+<html ng-app="scotchApp">
+<head lang="en">
+</head>
+<body ng-controller="TopSellersCtrl">
+
+<div class="row">
+    <div class="col-md-8">
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div ng-repeat="seller in TopSellerss">
+
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-4 text-center">
+                        <img ng-src="{{seller._imgUrl}}" alt="" style="max-width: 70%;max-height:  70%" class="center-block img-circle img-responsive" fallback-src = "http://s3.amazonaws.com/37assets/svn/765-default-avatar.png">
+                        <h3><strong> </strong></h3>
+                        <button ng-click="sendMessage(seller._userName)" class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Send message </button>
+                        <ul class="list-inline ratings text-center" title="Ratings">
+                            <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                            <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                            <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                            <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                            <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                        </ul>
+                    </div><!--/col-->
+
+
+                    <div class="col-xs-12 col-sm-8">
+                    <a ng-click="showProfile(seller.id)">    <h2>{{seller._userName}}</h2> </a>
+
+                        <p><strong>Rank: </strong> {{seller._userRank}}</p>
+                        <p><strong>Score: </strong> {{seller._score}}</p>
+
+                        <p><strong>Email: </strong> {{seller._email}} </p>
+
+                    </div>
+                    </div>
+                </div><!--/row-->
+            </div><!--/panel-body-->
+        </div><!--/panel-->
+
+
+
+    </div>
+</div>
+</div>
+</body>
+</html>

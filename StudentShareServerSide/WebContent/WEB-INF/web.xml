@@ -18,7 +18,7 @@
    <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
    </filter>
     <welcome-file-list>
-    <welcome-file>login.html</welcome-file>
+    <welcome-file>index.html</welcome-file>
   </welcome-file-list>
  <servlet>
  

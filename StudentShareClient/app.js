@@ -75,7 +75,7 @@ scotchApp.config(function($routeProvider, $httpProvider) {
         })
         // route for the about page
         .when('/Login', {
-            templateUrl : 'Login.html',
+            templateUrl : 'login1.html',
             controller  : 'loginController'
         })
         .when('/TopSellers', {
@@ -128,8 +128,8 @@ scotchApp.config(function($routeProvider, $httpProvider) {
 
 
 });
-scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window',
-    function EventListController($scope, $http, $rootScope, $window) {
+scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window','ngDialog',
+    function EventListController($scope, $http, $rootScope, $window, ngDialog) {
         // function to submit the form after all validation has occurred
     $scope.submitForm = function(isValid) {
         // check to make sure the form is completely valid
@@ -141,7 +141,7 @@ scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window
 
             $http({
                 method: 'POST',
-                url: 'http://localhost:8080/StudentShareProject/rest/User/Connect',
+                url: 'rest/User/Connect',
                 data: $scope.data,  // pass in data as strings
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
             })
@@ -155,7 +155,12 @@ scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window
                 }).error(function (data, status, headers, config) {
                     // called asynchronously if an error occurs
 
-                    alert(data);
+                    ngDialog.open({
+                        template: '<h4>'+data+'</h4>',
+                        className: 'ngdialog-theme-default',
+                        plain: true,
+                        overlay: true
+                    });
 
                     // or server returns response with an error status.
                 });
@@ -169,7 +174,7 @@ scotchApp.controller('loginController', ['$scope', '$http','$rootScope','$window
 function  getCurrentLoggedUser(http, callback){
     http({
         method  : 'GET',
-        url     : 'http://localhost:8080/StudentShareProject/rest/User/show',
+        url     : 'rest/User/show',
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
     }).success(function(data){
 
@@ -322,7 +327,7 @@ scotchApp.directive('pwCheck', [function () {
 
             $http({
                 method  : 'POST',
-                url     : 'http://localhost:8080/StudentShareProject/rest/User/Register',
+                url     : 'rest/User/Register',
                 data    : $scope.data,  // pass in data as strings
                 headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
             })
@@ -346,7 +351,7 @@ scotchApp.directive('pwCheck', [function () {
 function isUserConnected(http, callback){
     http({
         method  : 'GET',
-        url     : 'http://localhost:8080/StudentShareProject/rest/User/show',
+        url     : 'rest/User/show',
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
     }).success(function(data){
         if (data!=null) {
@@ -373,7 +378,7 @@ function getIdByUser(user, http, callback){
     requestParams = {username: user};
     http({
         method  : 'GET',
-        url     : 'http://localhost:8080/StudentShareProject/rest/User/getIdByUsername',
+        url     : 'rest/User/getIdByUsername',
         params     : requestParams,  // pass in data as strings
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
     }).success(function(data){
@@ -403,7 +408,7 @@ scotchApp.controller('newMessageCtrl', ['$scope', '$http','$rootScope','$locatio
 
                 $http({
                     method: 'POST',
-                    url: 'http://localhost:8080/StudentShareProject/rest/Message/send',
+                    url: 'rest/Message/send',
                     data: $scope.data,  // pass in data as strings
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}  // set the headers so angular passing info as form data (not request payload)
                 })
@@ -439,7 +444,7 @@ function deleteMessage(http, id, callback){
     requestParams = "messeageId=" + id;
     http({
         method  : 'POST',
-        url     : 'http://localhost:8080/StudentShareProject/rest/Message/delete',
+        url     : 'rest/Message/delete',
         data     : requestParams,  // pass in data as strings
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
     }).success(function(data){
@@ -458,7 +463,7 @@ function addToCart(http, id, callback){
     requestParams = "product_id=" + id;
     http({
         method  : 'POST',
-        url     : 'http://localhost:8080/StudentShareProject/rest/User/addToCart',
+        url     : 'rest/User/addToCart',
         data     : requestParams,  // pass in data as strings
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
     }).success(function(data){
@@ -491,7 +496,7 @@ function getMessagesById( $http, scope, type, myDataService) {
 
     $http({
         method: 'GET',
-        url: 'http://localhost:8080/StudentShareProject/rest/Message/'+ type,
+        url: 'rest/Message/'+ type,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
     }).success(function (data) {
@@ -540,7 +545,7 @@ function getUserById(id, http,counter, callback) {
     requestParams = {userId: id};
     return http({
         method: 'GET',
-        url: 'http://localhost:8080/StudentShareProject/rest/User/getUserByID',
+        url: 'rest/User/getUserByID',
         params: requestParams,
         headers : { 'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(function(result)

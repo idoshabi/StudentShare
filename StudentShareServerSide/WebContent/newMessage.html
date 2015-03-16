@@ -1,0 +1,80 @@
+<!-- Register.html -->
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<!-- apply angular app and controller to our body -->
+<body ng-app="scotchApp" ng-controller="newMessageCtrl">
+
+
+<!--
+<form class="navbar-form navbar-left" role="search">
+	<div class="form-group">
+		<input type="text" class="form-control" placeholder="Search">
+	</div>
+	<button type="submit" class="btn btn-default">Submit</button>
+</form>
+ -->
+<div class="container">
+    <div class="col-sm-8 col-sm-offset-2">
+
+        <!-- FORM -->
+        <!-- pass in the variable if our form is valid or invalid -->
+        <form name="newMsgForm" class="form-horizontal"  ng-submit="submitForm(newMsgForm.$valid)" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Username</label>
+                <div class="col-sm-10">
+                    <input type="text"  id="username" name="username" class="form-control" is-user-not-exist ng-model="username" ng-minlength="1" placeholder="Username " required>
+
+                  <span class="msg-error" ng-show="newMsgForm.username.$error.minlength===true">
+					Please enter Username to send
+				  </span>
+                <span class="msg-error" ng-show="newMsgForm.username.$error.userExist===true">
+					The Username is not exist!
+				  </span>
+
+                <span class="msg-sucess" ng-show="!(newMsgForm.username.$error.userExist===true)&& newMsgForm.username.$dirty">
+					exist
+				  </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Title" class="col-sm-2 control-label">Title:</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-minlength="0" ng-model="message.title" class="form-control" id="title" name="title" required>
+                </div>
+                  <span class="msg-error" ng-show="newMsgForm.title.$error.minlength===true">
+					Please enter a title
+				  </span>
+            </div>
+            <div class="form-group">
+                <label for="message" class="col-sm-2 control-label">Message</label>
+                <div class="col-sm-10">
+
+                    <textarea class="form-control"  ng-model="message.conant" rows="4" ng-minlength="0" name="message" required></textarea>
+                </div>
+                 <span class="msg-error" ng-show="newMsgForm.message.$error.minlength===true">
+					Please enter a message
+				  </span>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <input type="submit" ng-click="newMsgForm.$valid"class="btn btn-primary">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <! Will be used to display an alert to the user>
+                </div>
+            </div>
+        </form>
+
+    </div><!-- col-sm-8 -->
+</div><!-- /container -->
+</body>
+</html>

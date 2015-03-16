@@ -1,0 +1,124 @@
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+}
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.noWishFound{
+    solid-opacity: 1;
+    font-size: 14px;
+    color: cornflowerblue;
+}
+.noWishFound2{
+    solid-opacity: 1;
+    font-size: 15px;
+    color: orange;
+    font-size: large;
+}
+.noResultFound{
+    solid-opacity: 1;
+    font-size: 14px;
+    color: red;
+}
+
+.ng-invalid.ng-dirty {
+    border-color:red;
+}
+.ng-valid.ng-dirty
+{
+    border-color:green
+}
+* {
+    margin:0;
+    padding:0;
+}
+body {
+    padding:10px;
+}
+label {
+    display:block;
+    font-size:14px;
+    margin:10px 0 2px;
+}
+input {
+    padding:1px 3px;
+}
+.msg-block {
+    margin-top:5px;
+}
+.msg-error {
+    color:#F00;
+    font-size:14px;
+}
+
+.userBold{
+    font-size:16px;
+    color: #1155CC;
+}
+.msg-sucess {
+    color:#009933;
+    font-size:14px;
+}
+p.thick {
+    font-weight: bold;
+}
+
+body{ margin-top:50px;}
+
+.messageSender {min-width: 120px; text-decoration: underline ;display: inline-block}
+
+.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
+.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
+.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
+.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }
+.tab-pane .list-group input[type="checkbox"]{ margin-top: 2px; }
+.tab-pane .list-group .glyphicon { margin-right:5px; }
+.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }
+a.list-group-item.read { color: #222;background-color: #F3F3F3; }
+hr { margin-top: 5px;margin-bottom: 10px; }
+.nav-pills>li>a {padding: 5px 10px;}
+
+.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }
+.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}
+.ad a.url {color: #093;text-decoration: none;}
+
+.user-row {
+    margin-bottom: 14px;
+}
+
+.user-row:last-child {
+    margin-bottom: 0;
+}
+
+.dropdown-user {
+    margin: 13px 0;
+    padding: 5px;
+    height: 100%;
+}
+
+.dropdown-user:hover {
+    cursor: pointer;
+}
+
+.table-user-information > tbody > tr {
+    border-top: 1px solid rgb(221, 221, 221);
+}
+
+.table-user-information > tbody > tr:first-child {
+    border-top: 0;
+}
+
+
+.table-user-information > tbody > tr > td {
+    border-top: 0;
+}
+.toppad
+{margin-top:20px;
+}

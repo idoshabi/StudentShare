@@ -24,7 +24,7 @@ public class AuthFilter implements Filter {
 	public void init(FilterConfig config) throws ServletException {
 		// Get init parameter
 		ConnectionPool pool = new ConnectionPool();
-
+		
 		String logPath = config.getInitParameter("log_path");
 		log = new Utils(logPath);
 
@@ -56,13 +56,13 @@ public class AuthFilter implements Filter {
 		int id = Utils.retiveUserId((HttpServletRequest) request);
 		StringBuffer requestURL = ((HttpServletRequest) request)
 				.getRequestURL();
-		String URL = requestURL.toString();
+		String URL = requestURL.toString();/*
 		if (!IsAllowedUrl(URL) && id == 0) {
 			PrintWriter out = response.getWriter();
 			response.sendError(response.SC_FORBIDDEN , "Not connected!, please login or register First..");
 			
 			return;
-		}
+		}*/
 		try {
 			if (DBConn.conn.isClosed() || !DBConn.conn.isValid(0)) {
 				StaticInit();
@@ -86,10 +86,16 @@ public class AuthFilter implements Filter {
 	private Boolean IsAllowedUrl(String url) {
 		String[] bits = url.split("/");
 		String page = bits[bits.length - 1];
-		if (page.equals("login.html") || page.equals("Register.html")
+		if (page.equals("index.html") ||page.equals("login.html") || page.equals("Register.html")
 				|| page.equals("Connect") || page.equals("Register")|| page.equals("getIdByUsername")
-				|| page.equals("StudentShareProject")
+				|| page.equals("StudentShareProject")|| page.equals("Login")
 				|| page.equals("StudentShare")) {
+			return true;
+		}
+		String extension = page.substring(page.lastIndexOf("."));
+
+		if (!extension.equals(".html")&& !extension.equals(""))
+		{
 			return true;
 		}
 		return false;

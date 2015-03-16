@@ -238,9 +238,9 @@ public class User {
 		UserData data = null;
 		HttpSession session = req.getSession(true);
 		Object userId = session.getAttribute("user_id");
-
+		if (userId!=null){
 		data = userJdbc.showUserInfo((int) userId);
-
+		}
 		return Utils.toJson(data);
 
 	}

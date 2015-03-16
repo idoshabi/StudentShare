@@ -1,0 +1,84 @@
+<!-- Register.html -->
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<!-- apply angular app and controller to our body -->
+<body ng-app="scotchApp" ng-controller="RegisterController">
+<div class="container">
+	<div class="col-sm-8 col-sm-offset-2">
+
+		<!-- FORM -->
+		<!-- pass in the variable if our form is valid or invalid -->
+		<form name="userForm" ng-submit="submitForm(userForm.$valid )" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
+
+			<!-- NAME -->
+			<div class="form-group">
+				<label>Username:</label>
+				<input type="text" is-user-exist name="username" class="form-control" ng-model="user.username" ng-minlength="6" maxlength="24" required>
+			</div>
+			 <span class="msg-error" ng-show="userForm.username.$error.userExist===true">
+					The Username is already exist!
+				  </span>
+ 		<span class="msg-sucess" ng-show="!(userForm.username.$error.userExist===true) && !(userForm.username.$error.minlength === true)&& userForm.username.$dirty === true ">
+					The Username is free to use!
+				  </span>
+			<span class="msg-error" ng-show="userForm.username.$error.minlength === true || userForm.username.$error.maxlength ===true">
+				Please enter a 6-24 length Username  </span>
+
+
+			<!-- EMAIL -->
+			<div class="form-group">
+				<label>Email</label>
+				<input type="email" name="email" class="form-control" ng-model="user.email" required>
+			</div>
+			<span class="msg-error" ng-show="userForm.email.$error.email === true">Please enter a valid email</span>
+
+			<div class="form-group">
+				<label>	First Name:</label>
+				<input type="text" name="first_Name" id="first_Name" class="form-control" ng-model="user.first_Name" required>
+			</div>
+			<div class="form-group">
+				<label>	Last Name:</label>
+				<input type="text" name="last_name" class="form-control" ng-model="user.last_name" required>
+			</div>
+			<!-- USERNAME -->
+			<div class="form-group">
+				<label>Password:</label>
+				<input type="password" id="password" name="password" class="form-control" ng-model="user.password" ng-minlength="6" ng-maxlength="24" required>
+			</div>
+
+
+			<span class="msg-error" ng-show="userForm.password.$error.minlength === true|| userForm.password.$error.maxlength ===true">Please enter a 6-24 length password  </span>
+
+			<!-- USERNAME -->
+			<div class="form-group">
+				<label>Password confirm:</label>
+				<input type="password" name="confirm_pwd" id="confirm_pwd" class="form-control" ng-model="user.confirm_pwd" ng-minlength="6" ng-maxlength="24" required  pw-check="password">
+			</div>
+				  <span class="msg-error" ng-show="userForm.confirm_pwd.$error.pwmatch">
+					Passwords don't match.
+				  </span>
+
+
+			<div class="form-group">
+				<label>Image:</label>
+				<input type="text-local" name="image_url" class="form-control" ng-model="user.image_url" ng-chche>
+				<img src={{user.image_url}} style="width: 50px; height: 50px">
+			</div>
+
+
+
+
+					<!-- SUBMIT BUTTON -->
+			<br>
+					<button type="submit" ng-click="userForm.$valid" class="btn btn-primary">Submit</button>
+
+		</form>
+
+	</div><!-- col-sm-8 -->
+</div><!-- /container -->
+</body>
+</html>
